@@ -1,0 +1,59 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+
+{{ block "header" . }}{{end}}
+
+<section class="section">
+	<div class="container">
+		<h2 class="title is-4">
+			Account {{.Address}}
+		</h2>
+
+		<div class="container-fluid">
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					ID
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{.Address}}
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Balance
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{fmt_coin .Info.Balance}}
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Last Nonce
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{.Info.LastNonce}}
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Balance (mempool)
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{fmt_coin .Info.MempoolBalance}}
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Last Nonce (mempool)
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{.Info.MempoolNonce}}
+				</div>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+{{ end }}

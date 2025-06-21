@@ -1,0 +1,66 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+{{ block "header" . }}{{end}}
+<section class="section py-1">
+	<div class="container">
+		<div class="is-flex is-flex-wrap-wrap">
+			<div class="box is-flex info-card">
+				<div class="is-flex-grow-1">
+					Height
+				</div>
+				<div class="title is-3 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Height}}
+				</div>
+			</div>
+			<div class="box is-flex info-card">
+				<div class="is-flex-grow-1">
+					Hashrate
+				</div>
+				<div class="title is-3 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Hashrate}}
+				</div>
+			</div>
+			<div class="box is-flex info-card">
+				<div class="is-flex-grow-1">
+					Reward
+				</div>
+				<div class="title is-3 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Reward}}
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="container columns">
+		<a class="button">
+			Charts
+		</a>
+	</div>-->
+</section>
+<section class="section py-4">
+	<div class="container">
+		<h2 class="title is-4">Recent blocks</h2>
+
+		<table class="table" style="width: 100%;">
+			<thead>
+				<tr>
+					<th>Height</th>
+					<th>Hash</th>
+					<th>Transactions</th>
+					<th>Age</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{ range .Blocks }}
+				<tr>
+					<td>{{.Block.Height}}</td>
+					<td style="max-width:50vw;"><a href="/block/{{.Block.Height}}" class="hash">{{.Hash}}</a></td>
+					<td>{{len .Block.Transactions}}</td>
+					<td>{{age_ms .Block.Timestamp}}</td>
+				</tr>
+				{{ end }}		
+			</tbody>
+		</table>
+	</div>
+</section>
+{{ end }}

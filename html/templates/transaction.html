@@ -1,0 +1,91 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+
+{{ block "header" . }}{{end}}
+
+<section class="section">
+	<div class="container box">
+		<h2 class="title is-4">
+			Transaction info
+		</h2>
+
+		<div class="container-fluid">
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					ID
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{.Txid}}
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Sender
+				</div>
+				<a class="is-flex-grow-1 has-text-right hash" style="max-width:70%;"
+					href="/account/{{.Tx.Sender}}">
+					{{.Tx.Sender}}
+				</a>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Total amount sent
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{fmt_coin .Tx.TotalAmount}}
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Fees
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{fmt_coin .Tx.Fee}}
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					VSize
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{.Tx.VirtualSize}}
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid my-4">
+			<h3 class="title is-6 mb-2">
+				Outputs
+			</h3>
+			{{ range .Tx.Outputs }}
+			<div class="box">
+				<div class="is-flex">
+					<div class="is-flex-grow-1">
+						Recipient
+					</div>
+					<a class="is-flex-grow-1 has-text-right hash" style="max-width:70%;"
+						href="/account/{{.Recipient}}">
+						{{.Recipient}}
+					</a>
+				</div>
+				<div class="is-flex">
+					<div class="is-flex-grow-1">
+						Amount
+					</div>
+					<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+						{{fmt_coin .Amount}}
+					</div>
+				</div>
+			</div>
+			{{ end }}
+		</div>
+	</div>
+</section>
+
+</div>
+
+</div>
+</section>
+
+{{ end }}

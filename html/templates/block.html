@@ -1,0 +1,96 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+
+{{ block "header" . }}{{end}}
+
+<section class="section">
+	<div class="container">
+		<h2 class="title is-4">
+			Block {{.Block.Block.Height}}
+		</h2>
+
+		<div class="is-flex blockinfos">
+			<div class="blockinfo-left box is-flex-grow-2">
+				<div class="block">
+					<div class="is-flex">
+						<div class="is-flex-grow-1">
+							Block Hash
+						</div>
+						<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+							{{.Block.Block.Hash}}</div>
+					</div>
+					<div class="is-flex">
+						<div class="is-flex-grow-1">
+							Block Reward
+						</div>
+						<div class="is-flex-grow-1 has-text-right">{{.Block.PrintReward}} XNT</div>
+					</div>
+					<div class="is-flex">
+						<div class="is-flex-grow-1">
+							Difficulty
+						</div>
+						<div class="is-flex-grow-1 has-text-right">{{.Block.Block.Difficulty}}</div>
+					</div>
+					<div class="is-flex">
+						<div class="is-flex-grow-1">
+							Timestamp (UTC)
+						</div>
+						<div class="is-flex-grow-1 has-text-right">{{.Block.UTC}}</div>
+					</div>
+					<div class="is-flex">
+						<div class="is-flex-grow-1">
+							Miner
+						</div>
+						<a class="is-flex-grow-1 has-text-right hash" style="max-width:70%;" href="/account/{{.Block.Miner}}">
+							{{.Block.Miner}}
+						</a>
+					</div>
+					<div class="is-flex">
+						<div class="is-flex-grow-1">
+							MiniDAG SideBlocks
+						</div>
+						<div class="is-flex-grow-1 has-text-right">
+							{{len .Block.Block.SideBlocks}}
+						</div>
+					</div>
+
+					<div class="block mt-6">
+						<h3 class="title is-5">
+							Transactions in this block
+						</h3>
+
+						<table class="table" style="width: 100%;">
+							<thead>
+								<tr>
+									<th>TXID</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{ range .Block.Block.Transactions }}
+								<tr>
+									<td style="max-width:50vw;"><a href="/tx/{{.}}" class="hash">{{.}}</a></td>
+								</tr>
+								{{ end }}
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+			<div class="blockinfo-right">
+				<div><a href="/block/{{.Block.Prev}}" class="button is-primary">Previous block</a></div>
+				{{ if isGreaterEq .Info.Height .Block.Next }}
+				<div><a href="/block/{{.Block.Next}}" class="button is-primary">Next block</a></div>
+				{{ end }}
+			</div>
+		</div>
+
+
+
+
+	</div>
+
+</section>
+
+{{ end }}

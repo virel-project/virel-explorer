@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{{block "lang" .}}en{{end}}">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<title>{{block "title" .}}{{end}}</title>
+
+	<link rel="stylesheet" href="/bulma.min.css">
+	<link rel="stylesheet" href="/style.css">
+	<link rel="icon" href="/favicon.png">
+
+	
+	{{block "additional_scripts" .}}{{end}}
+</head>
+
+<body>
+	{{block "content" .}}{{end}}
+</body>
+
+</html>
