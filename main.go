@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"virel-blockchain/address"
 	"virel-blockchain/rpc/daemonrpc"
 	"virel-blockchain/util"
@@ -16,7 +17,7 @@ import (
 const MAX_BLOCKS_HISTORY = 50
 
 func main() {
-	d := daemonrpc.NewRpcClient("http://127.0.0.1:6311")
+	d := daemonrpc.NewRpcClient("http://127.0.0.1:6314")
 
 	bls := NewBlocks(d)
 	go bls.Updater()
@@ -124,6 +125,29 @@ func main() {
 			Info:    addrInfo,
 			Address: walletaddr,
 		})
+	})
+	e.GET("/search", func(c echo.Context) error {
+		query := strings.Trim(c.QueryParam("q"), " ")
+
+		if len(query) == 64 {
+			hexdata, err := hex.DecodeString(query)
+			if err != nil {
+				return err
+			}
+
+			_, err = d.GetBlockByHash(daemonrpc.GetBlockByHashRequest{
+				Hash: util.Hash(hexdata),
+			})
+			if err == nil {
+				return c.Redirect(http.StatusTemporaryRedirect, "/block/"+query)
+			} else {
+				return c.Redirect(http.StatusTemporaryRedirect, "/tx/"+query)
+			}
+		} else if len(query) > 16 {
+			return c.Redirect(http.StatusTemporaryRedirect, "/account/"+query)
+		}
+
+		return c.Redirect(http.StatusTemporaryRedirect, "/block/"+query)
 	})
 
 	e.Static("/", "./static/")
