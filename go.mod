@@ -4,9 +4,10 @@ go 1.24.0
 
 toolchain go1.24.4
 
-require github.com/labstack/echo/v4 v4.13.3
-
-require virel-blockchain v1.0.0
+require (
+	github.com/labstack/echo/v4 v4.13.3
+	github.com/virel-project/virel-blockchain v0.0.0-20250630080905-d3db01bce3c9
+)
 
 require (
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
@@ -24,7 +25,3 @@ require (
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
 )
-
-replace virel-blockchain => ../virel-blockchain
-
-replace github.com/virel-project/go-randomvirel => ../go-randomvirel

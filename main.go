@@ -6,10 +6,11 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"virel-blockchain/address"
-	"virel-blockchain/rpc/daemonrpc"
-	"virel-blockchain/util"
 	"virel-explorer/html"
+
+	"github.com/virel-project/virel-blockchain/address"
+	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
+	"github.com/virel-project/virel-blockchain/util"
 
 	"github.com/labstack/echo/v4"
 )

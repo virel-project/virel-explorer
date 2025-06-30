@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"sync"
 	"time"
-	"virel-blockchain/rpc/daemonrpc"
+
+	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
 )
 
 type Blocks struct {

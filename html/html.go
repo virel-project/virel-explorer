@@ -7,9 +7,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"virel-blockchain/rpc/daemonrpc"
-	sutil "virel-blockchain/util"
 	"virel-explorer/util"
+
+	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
+	sutil "github.com/virel-project/virel-blockchain/util"
 
 	"github.com/labstack/echo/v4"
 )
