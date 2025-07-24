@@ -55,7 +55,7 @@ func (b *Blocks) update() (bool, error) {
 			b.height = 1
 		}
 	}
-	if b.height != info.Height {
+	if b.height < info.Height {
 		b.height++
 
 		bl, err := b.client.GetBlockByHeight(daemonrpc.GetBlockByHeightRequest{

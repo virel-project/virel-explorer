@@ -120,7 +120,7 @@ func Address(c echo.Context, p AddressParams) error {
 }
 
 func (b *BlockRes) PrintReward() string {
-	return sutil.FormatCoin(b.Reward)
+	return sutil.FormatCoin(b.MinerReward)
 }
 func (b *BlockRes) UTC() string {
 	return time.UnixMilli(int64(b.Block.Timestamp)).Format("2006-01-02 15:04")
