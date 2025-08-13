@@ -114,6 +114,7 @@ func main() {
 		if err != nil {
 			return err
 		}
+		addr.Subaddr = 0
 
 		addrInfo, err := d.GetAddress(daemonrpc.GetAddressRequest{
 			Address: addr,
