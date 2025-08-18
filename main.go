@@ -137,13 +137,13 @@ func main() {
 				return err
 			}
 
-			_, err = d.GetBlockByHash(daemonrpc.GetBlockByHashRequest{
-				Hash: util.Hash(hexdata),
+			_, err = d.GetTransaction(daemonrpc.GetTransactionRequest{
+				Txid: util.Hash(hexdata),
 			})
 			if err == nil {
-				return c.Redirect(http.StatusTemporaryRedirect, "/block/"+query)
-			} else {
 				return c.Redirect(http.StatusTemporaryRedirect, "/tx/"+query)
+			} else {
+				return c.Redirect(http.StatusTemporaryRedirect, "/block/"+query)
 			}
 		} else if len(query) > 16 {
 			return c.Redirect(http.StatusTemporaryRedirect, "/account/"+query)
