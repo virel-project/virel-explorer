@@ -51,6 +51,12 @@ var funcs = template.FuncMap{
 	"fmt_coin": func(n uint64) string {
 		return sutil.FormatCoin(n)
 	},
+	"add": func(a, b uint64) uint64 {
+		return a + b
+	},
+	"sub": func(a, b uint64) uint64 {
+		return a - b
+	},
 }
 
 type IndexParams struct {
