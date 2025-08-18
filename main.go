@@ -123,9 +123,39 @@ func main() {
 			return err
 		}
 
+		/* * Transactions * */
+		// Pagination
+		page := uint64(0)
+		if p := c.QueryParam("page"); p != "" {
+			if n, err := strconv.ParseUint(p, 10, 64); err == nil {
+				page = n
+			}
+		}
+
+		// Side
+		transferType := c.QueryParam("transfer_type")
+		if transferType != "incoming" && transferType != "outgoing" {
+			transferType = "incoming"
+		}
+
+		// Transaction list
+		txList, err := d.GetTxList(daemonrpc.GetTxListRequest{
+			Address:      addr,
+			TransferType: transferType,
+			Page:         page,
+		})
+		if err != nil {
+			return err
+		}
+
 		return html.Address(c, html.AddressParams{
 			Info:    addrInfo,
 			Address: walletaddr,
+
+			// Transactions
+			Page:         page,
+			TransferType: transferType,
+			TxList:       txList,
 		})
 	})
 	e.GET("/search", func(c echo.Context) error {

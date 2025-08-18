@@ -106,6 +106,11 @@ func Transaction(c echo.Context, p TransactionParams) error {
 type AddressParams struct {
 	Address string
 	Info    *daemonrpc.GetAddressResponse
+
+	// Transactions
+	Page         uint64                       // page number for pagination
+	TransferType string                       // side: incoming / outgoing
+	TxList       *daemonrpc.GetTxListResponse // list of transaction hashes
 }
 
 func Address(c echo.Context, p AddressParams) error {
