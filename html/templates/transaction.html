@@ -50,6 +50,7 @@
 					{{fmt_coin .Tx.Fee}}
 				</div>
 			</div>
+			{{if not .Tx.Coinbase}}
 			<div class="is-flex">
 				<div class="is-flex-grow-1">
 					VSize
@@ -58,6 +59,7 @@
 					{{.Tx.VirtualSize}}
 				</div>
 			</div>
+			{{end}}
 		</div>
 
 		<div class="container-fluid my-4">
