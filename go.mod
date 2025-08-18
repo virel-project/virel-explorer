@@ -6,7 +6,7 @@ toolchain go1.24.4
 
 require (
 	github.com/labstack/echo/v4 v4.13.4
-	github.com/virel-project/virel-blockchain v0.0.0-20250723090907-8117eb69d5c9
+	github.com/virel-project/virel-blockchain v1.0.0
 )
 
 require (

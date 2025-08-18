@@ -25,6 +25,8 @@ github.com/valyala/fasttemplate v1.2.2 h1:lxLXG0uE3Qnshl9QyaK6XJxMXlQZELvChBOCmQ
 github.com/valyala/fasttemplate v1.2.2/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
 github.com/virel-project/virel-blockchain v0.0.0-20250723090907-8117eb69d5c9 h1:eKWf1q9Lbe/1Zjs8CE2HrAkN1kms3mG+ZMPhSeNWZ/0=
 github.com/virel-project/virel-blockchain v0.0.0-20250723090907-8117eb69d5c9/go.mod h1:FpwCuM5YU+y83WFpt8ata/f85Rlj8LvFq2zIAJuE1/M=
+github.com/virel-project/virel-blockchain v1.0.0 h1:TRkxgO8Y8yIScsUUn9kZ1PvomlDnDdCOLU1d2oFN3y8=
+github.com/virel-project/virel-blockchain v1.0.0/go.mod h1:aD/n7258mzSmDpzoVHjyyqJN0wNbD7AgB5AqBdW5kVc=
 github.com/zeebo/assert v1.3.1 h1:vukIABvugfNMZMQO1ABsyQDJDTVQbn+LWSMy1ol1h6A=
 github.com/zeebo/assert v1.3.1/go.mod h1:Pq9JiuJQpG8JLJdtkwrJESF0Foym2/D9XMU5ciN/wJ0=
 github.com/zeebo/blake3 v0.2.4 h1:KYQPkhpRtcqh0ssGYcKLG1JYvddkEA8QwCM/yBqhaZI=
