@@ -2,6 +2,7 @@ package html
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"strconv"
@@ -87,8 +88,67 @@ func Block(c echo.Context, p BlockParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+// ---------------- Transaction ----------------
+
+// Recipient can be either a string or an array of strings in daemon JSON.
+// We normalize it to the first string so templates can use {{.Recipient}} directly.
+type Recipient string
+
+func (r *Recipient) UnmarshalJSON(b []byte) error {
+	// try string
+	var s string
+	if err := json.Unmarshal(b, &s); err == nil {
+		*r = Recipient(s)
+		return nil
+	}
+	// try []string
+	var arr []string
+	if err := json.Unmarshal(b, &arr); err == nil {
+		if len(arr) > 0 {
+			*r = Recipient(arr[0])
+		} else {
+			*r = ""
+		}
+		return nil
+	}
+	// try []any and use first string element if present
+	var anyArr []any
+	if err := json.Unmarshal(b, &anyArr); err == nil && len(anyArr) > 0 {
+		if first, ok := anyArr[0].(string); ok {
+			*r = Recipient(first)
+			return nil
+		}
+	}
+	// fallback
+	*r = ""
+	return nil
+}
+
+type TxOutput struct {
+	Recipient Recipient `json:"recipient"`
+	Amount    uint64    `json:"amount"`
+}
+
+type TxResponse struct {
+	Sender      string     `json:"sender"`
+	Recipient   Recipient  `json:"recipient"`
+	TotalAmount uint64     `json:"total_amount"`
+	Fee         uint64     `json:"fee"`
+	VirtualSize uint64     `json:"virtual_size"`
+	Outputs     []TxOutput `json:"outputs"`
+	Height      uint64     `json:"height"`
+	Nonce       uint64     `json:"nonce"`
+	Coinbase    bool       `json:"coinbase"`
+	Signature   string     `json:"signature"`
+}
+
+// ✅ Expose .Amount for templates (alias to TotalAmount)
+func (t *TxResponse) Amount() uint64 {
+	return t.TotalAmount
+}
+
 type TransactionParams struct {
-	Tx   *daemonrpc.GetTransactionResponse
+	Tx   *TxResponse
 	Txid string
 }
 
@@ -102,6 +162,8 @@ func Transaction(c echo.Context, p TransactionParams) error {
 
 	return c.HTMLBlob(200, b.Bytes())
 }
+
+// ---------------- Address ----------------
 
 type AddressParams struct {
 	Address string
@@ -119,6 +181,8 @@ func Address(c echo.Context, p AddressParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+// ---------------- Block utils ----------------
+
 func (b *BlockRes) PrintReward() string {
 	return sutil.FormatCoin(b.MinerReward)
 }
@@ -134,6 +198,8 @@ func (b *BlockRes) Prev() uint64 {
 func (b *BlockRes) Next() uint64 {
 	return b.Block.Height + 1
 }
+
+// ---------------- Info utils ----------------
 
 func (i *InfoRes) Hashrate() string {
 	diff, err := strconv.ParseFloat(i.Difficulty, 64)
