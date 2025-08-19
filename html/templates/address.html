@@ -67,13 +67,19 @@
 			<table class="table" style="width: 100%;">
                 <thead>
                 	<tr>
-                		<th>TXID</th>
+						<th>Time</th>
+						<th>Height</th>
+                		<th>Hash</th>
+						<th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
-                	{{ range .TxList.Transactions }}
+					{{ range .TxList }}
                     <tr>
-                    	<td style="max-width:50vw;"><a href="/tx/{{.}}" class="hash">{{.}}</a></td>
+						<td>{{ index $.BlockTimes .Tx.Height }}</td>
+						<td>{{ .Tx.Height }}</td>
+                    	<td style="max-width:50vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
+						<td>{{ fmt_coin .Tx.TotalAmount }} VRL</td>
                     </tr>
                     {{ end }}
                 </tbody>
@@ -83,7 +89,7 @@
 				{{ if isGreater .Page 0 }}
 				<a class="button is-primary" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{sub .Page 1}}">Previous</a>
 				{{ end }}
-				{{ if isGreater .TxList.MaxPage .Page }}
+				{{ if isGreater .MaxPage .Page }}
 				<a class="button is-primary" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{add .Page 1}}">Next</a>
 				{{ end }}
             </div>

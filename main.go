@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 	"virel-explorer/html"
@@ -138,8 +139,8 @@ func main() {
 			transferType = "incoming"
 		}
 
-		// Transaction list
-		txList, err := d.GetTxList(daemonrpc.GetTxListRequest{
+		// Transaction hash list
+		txs, err := d.GetTxList(daemonrpc.GetTxListRequest{
 			Address:      addr,
 			TransferType: transferType,
 			Page:         page,
@@ -148,14 +149,51 @@ func main() {
 			return err
 		}
 
+		// Transaction list
+		txList := make([]html.TransactionParams, 0, len(txs.Transactions))
+		for _, id := range txs.Transactions {
+			txRes, err := d.GetTransaction(daemonrpc.GetTransactionRequest{Txid: id})
+			if err != nil {
+				continue
+			}
+
+			txList = append(txList, html.TransactionParams{
+				Tx:   txRes,
+				Txid: id.String(),
+			})
+		}
+
+		// Sort them by height
+		sort.Slice(txList, func(a, b int) bool {
+			return txList[a].Tx.Height > txList[b].Tx.Height
+		})
+
+		// For the timestamp of transactions, we need to fetch blocks
+		blockTimes := make(map[uint64]string)
+		for _, tx := range txList {
+			if _, seen := blockTimes[tx.Tx.Height]; seen {
+				continue
+			}
+
+			blkRes, err := d.GetBlockByHeight(daemonrpc.GetBlockByHeightRequest{Height: tx.Tx.Height})
+			if err != nil {
+				continue
+			}
+
+			// Convert Unix timestamp to UTC string
+			blockTimes[tx.Tx.Height] = (*html.BlockRes)(blkRes).UTC()
+		}
+
 		return html.Address(c, html.AddressParams{
 			Info:    addrInfo,
 			Address: walletaddr,
 
 			// Transactions
 			Page:         page,
+			MaxPage:      txs.MaxPage,
 			TransferType: transferType,
 			TxList:       txList,
+			BlockTimes:   blockTimes,
 		})
 	})
 	e.GET("/search", func(c echo.Context) error {
