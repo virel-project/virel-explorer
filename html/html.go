@@ -51,6 +51,12 @@ var funcs = template.FuncMap{
 	"fmt_coin": func(n uint64) string {
 		return sutil.FormatCoin(n)
 	},
+	"add": func(a, b uint64) uint64 {
+		return a + b
+	},
+	"sub": func(a, b uint64) uint64 {
+		return a - b
+	},
 }
 
 type IndexParams struct {
@@ -106,6 +112,11 @@ func Transaction(c echo.Context, p TransactionParams) error {
 type AddressParams struct {
 	Address string
 	Info    *daemonrpc.GetAddressResponse
+
+	// Transactions
+	Page         uint64                       // page number for pagination
+	TransferType string                       // side: incoming / outgoing
+	TxList       *daemonrpc.GetTxListResponse // list of transaction hashes
 }
 
 func Address(c echo.Context, p AddressParams) error {
