@@ -114,9 +114,11 @@ type AddressParams struct {
 	Info    *daemonrpc.GetAddressResponse
 
 	// Transactions
-	Page         uint64                       // page number for pagination
-	TransferType string                       // side: incoming / outgoing
-	TxList       *daemonrpc.GetTxListResponse // list of transaction hashes
+	Page         uint64              // page number for pagination
+	MaxPage      uint64              // total number of available pages
+	TransferType string              // side: incoming / outgoing
+	TxList       []TransactionParams // list of transaction (id + tx)
+	BlockTimes   map[uint64]string   // block timestamps (to show transaction timestamps in UTC)
 }
 
 func Address(c echo.Context, p AddressParams) error {
