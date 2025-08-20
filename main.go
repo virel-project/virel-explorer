@@ -24,6 +24,9 @@ func main() {
 	bls := NewBlocks(d)
 	go bls.Updater()
 
+	rl := NewRichList(d)
+	go rl.Updater()
+
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
@@ -38,7 +41,26 @@ func main() {
 		})
 	})
 	e.GET("/richlist", func(c echo.Context) error {
-		return html.RichList(c, html.RichListParams{})
+		list, supply := rl.Get()
+		items := make([]html.RichListItem, len(list))
+
+		for i, st := range list {
+			items[i] = html.RichListItem{
+				Rank:    i + 1,
+				Address: st.Address,
+				Balance: st.State.Balance,
+				Percent: func() float64 {
+					if supply == 0 {
+						return 0
+					}
+					return float64(st.State.Balance) / float64(supply) * 100
+				}(),
+			}
+		}
+
+		return html.RichList(c, html.RichListParams{
+			List: items,
+		})
 	})
 	e.GET("/block/:bl", func(c echo.Context) error {
 		bl := c.Param("bl")
