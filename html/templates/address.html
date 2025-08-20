@@ -63,34 +63,61 @@
                 	<li class="{{if eq .TransferType "outgoing"}}is-active{{end}}"><a href="/account/{{.Address}}?transfer_type=outgoing">Outgoing</a></li>
                 </ul>
             </div>
-
-			<table class="table mb-6" style="width: 100%;">
-                <thead>
-                	<tr>
-						<th>Time</th>
-						<th>Height</th>
-                		<th>Hash</th>
-						{{ if eq $.TransferType "incoming" }}<th>Sender</th>{{ end }}
-						<th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-					{{ range .TxList }}
-                    <tr>
-						<td style="text-wrap: nowrap;">{{ index $.BlockTimes .Tx.Height }}</td>
-						<td>{{ .Tx.Height }}</td>
-                    	<td style="max-width:50vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
+			
+			<div class="table-container">
+				<table class="table is-striped is-hoverable is-fullwidth is-narrow mb-6" style="width: 100%;">
+					<thead>
+						<tr>
+							<th>Time</th>
+							<th>Height</th>
+							<th>Hash</th>
+							<th>{{ if eq $.TransferType "incoming" }}Sender{{ else }}Recipient{{end}}</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{ range $tx := .TxList }}
+						
+						<!-- Incoming Transaction -->
 						{{ if eq $.TransferType "incoming" }}
-						<td>{{ if .Tx.Coinbase }}Coinbase
-							{{ else if .Tx.Sender }}
-							<a href="/account/{{ .Tx.Sender }}">{{ .Tx.Sender }}</a>
-							{{ else }}Unknown{{ end }}</td>
-						{{ end }}
-						<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
-                    </tr>
-                    {{ end }}
-                </tbody>
-            </table>
+						<tr>
+							<!-- Time -->
+							<td style="text-wrap: nowrap;">{{ index $.BlockTimes .Tx.Height }}</td>
+							<!-- Height -->
+							<td>{{ .Tx.Height }}</td>
+							<!-- Hash -->
+							<td style="max-width:50vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
+							<!-- Sender -->
+							<td>{{ if .Tx.Coinbase }}Coinbase
+								{{ else if .Tx.Sender }}
+								<a href="/account/{{ .Tx.Sender }}">{{ .Tx.Sender }}</a>
+								{{ else }}Unknown{{ end }}</td>
+							<!-- Amount -->
+							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
+						</tr>
+
+						<!-- Outgoing Transaction -->
+						{{ else }}
+						{{ range $i, $out := .Tx.Outputs }}
+						<tr>
+							<!-- If first output of a transaction show time, height and hash else nothing -->
+							{{ if eq $i 0 }}
+							<td style="text-wrap: nowrap;">{{ index $.BlockTimes $tx.Tx.Height }}</td>
+							<td>{{ $tx.Tx.Height }}</td>
+							<td style="max-width:50vw;"><a href="/tx/{{$tx.Txid}}" class="hash">{{$tx.Txid}}</a></td>
+							{{else}}
+							<td colspan="3"></td>
+							{{ end }}
+
+							<td style="text-wrap: nowrap;"><a href="/account/{{.Recipient}}">{{ .Recipient }}</a></td>
+							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
+						</tr>
+						{{ end }} <!-- End of outputs range -->
+						{{ end }} <!-- End of if else transfer_type -->
+						{{ end }} <!-- End of txs range -->
+					</tbody>
+				</table>
+			</div>
 
 			<div class="buttons is-centered">
 				<!-- First button -->
