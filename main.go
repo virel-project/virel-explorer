@@ -24,6 +24,9 @@ func main() {
 	bls := NewBlocks(d)
 	go bls.Updater()
 
+	rl := NewRichList(d)
+	go rl.Updater()
+
 	e := echo.New()
 
 	e.GET("/", func(c echo.Context) error {
@@ -35,6 +38,28 @@ func main() {
 		return html.Index(c, html.IndexParams{
 			Info:   (*html.InfoRes)(info),
 			Blocks: bls.GetList(),
+		})
+	})
+	e.GET("/richlist", func(c echo.Context) error {
+		list, supply := rl.Get()
+		items := make([]html.RichListItem, len(list))
+
+		for i, st := range list {
+			items[i] = html.RichListItem{
+				Rank:    i + 1,
+				Address: st.Address,
+				Balance: st.State.Balance,
+				Percent: func() float64 {
+					if supply == 0 {
+						return 0
+					}
+					return float64(st.State.Balance) / float64(supply) * 100
+				}(),
+			}
+		}
+
+		return html.RichList(c, html.RichListParams{
+			List: items,
 		})
 	})
 	e.GET("/block/:bl", func(c echo.Context) error {
@@ -118,7 +143,7 @@ func main() {
 		addr.PaymentId = 0
 
 		addrInfo, err := d.GetAddress(daemonrpc.GetAddressRequest{
-			Address: addr,
+			Address: addr.String(),
 		})
 		if err != nil {
 			return err
@@ -150,16 +175,28 @@ func main() {
 		}
 
 		// Transaction list
-		txList := make([]html.TransactionParams, 0, len(txs.Transactions))
+		txList := make([]html.TransactionItem, 0, len(txs.Transactions))
 		for _, id := range txs.Transactions {
 			txRes, err := d.GetTransaction(daemonrpc.GetTransactionRequest{Txid: id})
 			if err != nil {
 				continue
 			}
 
-			txList = append(txList, html.TransactionParams{
+			txList = append(txList, html.TransactionItem{
 				Tx:   txRes,
 				Txid: id.String(),
+				Amount: func() uint64 {
+					if transferType == "incoming" {
+						var sum uint64
+						for _, o := range txRes.Outputs {
+							if o.Recipient == addr.Addr && o.PaymentId == addr.PaymentId {
+								sum += o.Amount
+							}
+						}
+						return sum
+					}
+					return txRes.TotalAmount
+				}(),
 			})
 		}
 
@@ -218,6 +255,13 @@ func main() {
 		}
 
 		return c.Redirect(http.StatusTemporaryRedirect, "/block/"+query)
+	})
+	e.GET("/supply", func(c echo.Context) error {
+		infoRes, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusOK, strconv.FormatUint(infoRes.CirculatingSupply, 10))
 	})
 
 	e.Static("/", "./static/")

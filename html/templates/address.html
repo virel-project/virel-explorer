@@ -63,35 +63,89 @@
                 	<li class="{{if eq .TransferType "outgoing"}}is-active{{end}}"><a href="/account/{{.Address}}?transfer_type=outgoing">Outgoing</a></li>
                 </ul>
             </div>
+			
+			<div class="table-container">
+				<table class="table is-striped is-hoverable is-fullwidth is-narrow mb-6">
+					<thead>
+						<tr>
+							<th>Time</th>
+							<th>Height</th>
+							<th>Hash</th>
+							<th>{{ if eq $.TransferType "incoming" }}Sender{{ else }}Recipient{{end}}</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{ range $tx := .TxList }}
+						
+						<!-- Incoming Transaction -->
+						{{ if eq $.TransferType "incoming" }}
+						<tr>
+							<!-- Time -->
+							<td style="text-wrap: nowrap;">{{ index $.BlockTimes .Tx.Height }}</td>
+							<!-- Height -->
+							<td>{{ .Tx.Height }}</td>
+							<!-- Hash -->
+							<td style="max-width:50vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
+							<!-- Sender -->
+							<td>{{ if .Tx.Coinbase }}Coinbase
+								{{ else if .Tx.Sender }}
+								<a href="/account/{{ .Tx.Sender }}">{{ .Tx.Sender }}</a>
+								{{ else }}Unknown{{ end }}</td>
+							<!-- Amount -->
+							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
+						</tr>
 
-			<table class="table" style="width: 100%;">
-                <thead>
-                	<tr>
-						<th>Time</th>
-						<th>Height</th>
-                		<th>Hash</th>
-						<th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-					{{ range .TxList }}
-                    <tr>
-						<td>{{ index $.BlockTimes .Tx.Height }}</td>
-						<td>{{ .Tx.Height }}</td>
-                    	<td style="max-width:50vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
-						<td>{{ fmt_coin .Tx.TotalAmount }} VRL</td>
-                    </tr>
-                    {{ end }}
-                </tbody>
-            </table>
+						<!-- Outgoing Transaction -->
+						{{ else }}
+						{{ range $i, $out := .Tx.Outputs }}
+						<tr>
+							<!-- If first output of a transaction show time, height and hash else nothing -->
+							{{ if eq $i 0 }}
+							<td style="text-wrap: nowrap;">{{ index $.BlockTimes $tx.Tx.Height }}</td>
+							<td>{{ $tx.Tx.Height }}</td>
+							<td style="max-width:50vw;"><a href="/tx/{{$tx.Txid}}" class="hash">{{$tx.Txid}}</a></td>
+							{{else}}
+							<td colspan="3"></td>
+							{{ end }}
 
-			<div class="buttons">
-				{{ if isGreater .Page 0 }}
-				<a class="button is-primary" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{sub .Page 1}}">Previous</a>
-				{{ end }}
-				{{ if isGreater .MaxPage .Page }}
-				<a class="button is-primary" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{add .Page 1}}">Next</a>
-				{{ end }}
+							<td style="text-wrap: nowrap;"><a href="/account/{{.Recipient}}">{{ .Recipient }}</a></td>
+							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
+						</tr>
+						{{ end }} <!-- End of outputs range -->
+						{{ end }} <!-- End of if else transfer_type -->
+						{{ end }} <!-- End of txs range -->
+					</tbody>
+				</table>
+			</div>
+
+			<div class="buttons is-centered">
+				<!-- First button -->
+				<!-- if page > 1 ? is-primary : is-static-->
+				<a class="button {{ if isGreater .Page 1 }}is-primary{{ else }}is-static{{ end }}"
+					title="First page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}">
+					<span class="icon">
+						<i class="fas fa-angle-double-left"></i>
+					</span>
+				</a>
+
+				<!-- Previous button-->
+				<a class="button {{ if isGreater .Page 0 }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{sub .Page 1}}">Previous</a>
+
+				<!-- Current page indicator -->
+				<span class="button is-static">Page {{add .Page 1}} of {{add .MaxPage 1}}</span>
+
+				<!-- Next button -->
+				<a class="button {{ if isGreater .MaxPage .Page }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{add .Page 1}}">Next</a>
+
+				<!-- Last button -->
+				<!-- if page <= maxPage - 2 ? is-primary : is-static -->
+				<a class="button {{ if and (isGreater .MaxPage 3) (le .Page (sub .MaxPage 2)) }}is-primary{{ else }}is-static{{ end }}" 
+					title="Last page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{.MaxPage}}">
+					<span class="icon">
+						<i class="fas fa-angle-double-right"></i>
+					</span>
+				</a>
             </div>
 
 		</div>

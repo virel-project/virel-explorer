@@ -5,28 +5,36 @@
 <section class="section py-1">
 	<div class="container">
 		<div class="is-flex is-flex-wrap-wrap">
-			<div class="box is-flex info-card">
+			<div class="box is-flex info-card is-align-items-center">
 				<div class="is-flex-grow-1">
 					Height
 				</div>
-				<div class="title is-3 is-flex-grow-1 has-text-right has-text-primary">
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
 					{{.Info.Height}}
 				</div>
 			</div>
-			<div class="box is-flex info-card">
+			<div class="box is-flex info-card is-align-items-center">
 				<div class="is-flex-grow-1">
 					Hashrate
 				</div>
-				<div class="title is-3 is-flex-grow-1 has-text-right has-text-primary">
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
 					{{.Info.Hashrate}}
 				</div>
 			</div>
-			<div class="box is-flex info-card">
+			<div class="box is-flex info-card is-align-items-center">
 				<div class="is-flex-grow-1">
 					Reward
 				</div>
-				<div class="title is-3 is-flex-grow-1 has-text-right has-text-primary">
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
 					{{.Info.Reward}}
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Supply
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Circulating}} ({{.Info.CirculatingPercent}})
 				</div>
 			</div>
 		</div>

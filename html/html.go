@@ -109,16 +109,45 @@ func Transaction(c echo.Context, p TransactionParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+/* * Rich List * */
+type RichListItem struct {
+	Rank    int
+	Address string
+	Balance uint64
+	Percent float64
+}
+
+type RichListParams struct {
+	List []RichListItem
+}
+
+func RichList(c echo.Context, p RichListParams) error {
+	b := bytes.NewBuffer([]byte{})
+	err := parse("richlist.html").Execute(b, p)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return c.HTMLBlob(200, b.Bytes())
+}
+
+type TransactionItem struct {
+	Tx     *daemonrpc.GetTransactionResponse
+	Txid   string
+	Amount uint64
+}
+
 type AddressParams struct {
 	Address string
 	Info    *daemonrpc.GetAddressResponse
 
 	// Transactions
-	Page         uint64              // page number for pagination
-	MaxPage      uint64              // total number of available pages
-	TransferType string              // side: incoming / outgoing
-	TxList       []TransactionParams // list of transaction (id + tx)
-	BlockTimes   map[uint64]string   // block timestamps (to show transaction timestamps in UTC)
+	Page         uint64            // page number for pagination
+	MaxPage      uint64            // total number of available pages
+	TransferType string            // side: incoming / outgoing
+	TxList       []TransactionItem // list of transaction (id + tx)
+	BlockTimes   map[uint64]string // block timestamps (to show transaction timestamps in UTC)
 }
 
 func Address(c echo.Context, p AddressParams) error {
@@ -159,4 +188,25 @@ func (i *InfoRes) Hashrate() string {
 
 func (i *InfoRes) Reward() string {
 	return strconv.FormatFloat(float64(i.BlockReward)/float64(i.Coin), 'f', 2, 64) + " VRL"
+}
+
+func formatNumber(n float64) string {
+	switch {
+	case n >= 1_000_000_000:
+		return strconv.FormatFloat(n/1_000_000_000, 'f', 2, 64) + "B"
+	case n >= 1_000_000:
+		return strconv.FormatFloat(n/1_000_000, 'f', 2, 64) + "M"
+	case n >= 1_000:
+		return strconv.FormatFloat(n/1_000, 'f', 2, 64) + "K"
+	default:
+		return strconv.FormatFloat(n, 'f', 2, 64)
+	}
+}
+
+func (i *InfoRes) Circulating() string {
+	return formatNumber(float64(i.CirculatingSupply) / float64(i.Coin))
+}
+
+func (i *InfoRes) CirculatingPercent() string {
+	return strconv.FormatFloat(float64(i.CirculatingSupply)/float64(i.MaxSupply)*100, 'f', 2, 64) + "%"
 }
