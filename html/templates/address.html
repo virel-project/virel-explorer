@@ -7,7 +7,7 @@
 <section class="section">
 	<div class="container">
 		<h2 class="title is-4">
-			{{ if eq .Address entity .Address}}
+			{{ if eq .Address (entity .Address) }}
 			Account {{.Address}}
 			{{ else }}
 			Account {{.Address}} ({{entity .Address}})

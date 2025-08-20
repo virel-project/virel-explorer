@@ -22,7 +22,7 @@
                     {{ range .List }}
                     <tr>
                         <td>{{ .Rank }}</td>
-                        <td style="max-width:50vw;"><a href="/account/{{ .Address }}" class="hash">{{ .Address }}</a></td>
+                        <td style="max-width:50vw;"><a href="/account/{{ .Address }}" class="hash">{{ entity .Address }}</a></td>
                         <td>{{ fmt_coin .Balance }}</td>
                         <td>{{ printf "%.2f" .Percent }}</td>
                     </tr>

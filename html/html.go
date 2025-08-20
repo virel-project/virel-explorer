@@ -9,7 +9,6 @@ import (
 	"time"
 	"virel-explorer/util"
 
-	"github.com/virel-project/virel-blockchain/address"
 	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
 	sutil "github.com/virel-project/virel-blockchain/util"
 
@@ -53,9 +52,7 @@ var funcs = template.FuncMap{
 	"sub": func(a, b uint64) uint64 {
 		return a - b
 	},
-	"entity": func(a address.Address) string {
-		s := a.String()
-
+	"entity": func(s string) string {
 		if len(Entities[s]) > 0 {
 			return Entities[s]
 		}
