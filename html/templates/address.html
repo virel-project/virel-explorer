@@ -86,7 +86,7 @@
 							<a href="/account/{{ .Tx.Sender }}">{{ .Tx.Sender }}</a>
 							{{ else }}Unknown{{ end }}</td>
 						{{ end }}
-						<td style="text-wrap: nowrap;">{{ fmt_coin .Tx.TotalAmount }} VRL</td>
+						<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
                     </tr>
                     {{ end }}
                 </tbody>

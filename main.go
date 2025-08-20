@@ -175,16 +175,28 @@ func main() {
 		}
 
 		// Transaction list
-		txList := make([]html.TransactionParams, 0, len(txs.Transactions))
+		txList := make([]html.TransactionItem, 0, len(txs.Transactions))
 		for _, id := range txs.Transactions {
 			txRes, err := d.GetTransaction(daemonrpc.GetTransactionRequest{Txid: id})
 			if err != nil {
 				continue
 			}
 
-			txList = append(txList, html.TransactionParams{
+			txList = append(txList, html.TransactionItem{
 				Tx:   txRes,
 				Txid: id.String(),
+				Amount: func() uint64 {
+					if transferType == "incoming" {
+						var sum uint64
+						for _, o := range txRes.Outputs {
+							if o.Recipient == addr.Addr && o.PaymentId == addr.PaymentId {
+								sum += o.Amount
+							}
+						}
+						return sum
+					}
+					return txRes.TotalAmount
+				}(),
 			})
 		}
 

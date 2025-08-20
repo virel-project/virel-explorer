@@ -132,16 +132,22 @@ func RichList(c echo.Context, p RichListParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+type TransactionItem struct {
+	Tx     *daemonrpc.GetTransactionResponse
+	Txid   string
+	Amount uint64
+}
+
 type AddressParams struct {
 	Address string
 	Info    *daemonrpc.GetAddressResponse
 
 	// Transactions
-	Page         uint64              // page number for pagination
-	MaxPage      uint64              // total number of available pages
-	TransferType string              // side: incoming / outgoing
-	TxList       []TransactionParams // list of transaction (id + tx)
-	BlockTimes   map[uint64]string   // block timestamps (to show transaction timestamps in UTC)
+	Page         uint64            // page number for pagination
+	MaxPage      uint64            // total number of available pages
+	TransferType string            // side: incoming / outgoing
+	TxList       []TransactionItem // list of transaction (id + tx)
+	BlockTimes   map[uint64]string // block timestamps (to show transaction timestamps in UTC)
 }
 
 func Address(c echo.Context, p AddressParams) error {
