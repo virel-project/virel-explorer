@@ -183,3 +183,24 @@ func (i *InfoRes) Hashrate() string {
 func (i *InfoRes) Reward() string {
 	return strconv.FormatFloat(float64(i.BlockReward)/float64(i.Coin), 'f', 2, 64) + " VRL"
 }
+
+func formatNumber(n float64) string {
+	switch {
+	case n >= 1_000_000_000:
+		return strconv.FormatFloat(n/1_000_000_000, 'f', 2, 64) + "B"
+	case n >= 1_000_000:
+		return strconv.FormatFloat(n/1_000_000, 'f', 2, 64) + "M"
+	case n >= 1_000:
+		return strconv.FormatFloat(n/1_000, 'f', 2, 64) + "K"
+	default:
+		return strconv.FormatFloat(n, 'f', 2, 64)
+	}
+}
+
+func (i *InfoRes) Circulating() string {
+	return formatNumber(float64(i.CirculatingSupply) / float64(i.Coin))
+}
+
+func (i *InfoRes) CirculatingPercent() string {
+	return strconv.FormatFloat(float64(i.CirculatingSupply)/float64(i.MaxSupply)*100, 'f', 2, 64) + "%"
+}
