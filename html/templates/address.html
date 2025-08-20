@@ -64,7 +64,7 @@
                 </ul>
             </div>
 
-			<table class="table" style="width: 100%;">
+			<table class="table mb-6" style="width: 100%;">
                 <thead>
                 	<tr>
 						<th>Time</th>
@@ -85,13 +85,33 @@
                 </tbody>
             </table>
 
-			<div class="buttons">
-				{{ if isGreater .Page 0 }}
-				<a class="button is-primary" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{sub .Page 1}}">Previous</a>
-				{{ end }}
-				{{ if isGreater .MaxPage .Page }}
-				<a class="button is-primary" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{add .Page 1}}">Next</a>
-				{{ end }}
+			<div class="buttons is-centered">
+				<!-- First button -->
+				<!-- if page > 1 ? is-primary : is-static-->
+				<a class="button {{ if isGreater .Page 1 }}is-primary{{ else }}is-static{{ end }}"
+					title="First page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}">
+					<span class="icon">
+						<i class="fas fa-angle-double-left"></i>
+					</span>
+				</a>
+
+				<!-- Previous button-->
+				<a class="button {{ if isGreater .Page 0 }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{sub .Page 1}}">Previous</a>
+
+				<!-- Current page indicator -->
+				<span class="button is-static">Page {{add .Page 1}} of {{add .MaxPage 1}}</span>
+
+				<!-- Next button -->
+				<a class="button {{ if isGreater .MaxPage .Page }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{add .Page 1}}">Next</a>
+
+				<!-- Last button -->
+				<!-- if page <= maxPage - 2 ? is-primary : is-static -->
+				<a class="button {{ if and (isGreater .MaxPage 3) (le .Page (sub .MaxPage 2)) }}is-primary{{ else }}is-static{{ end }}" 
+					title="Last page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{.MaxPage}}">
+					<span class="icon">
+						<i class="fas fa-angle-double-right"></i>
+					</span>
+				</a>
             </div>
 
 		</div>
