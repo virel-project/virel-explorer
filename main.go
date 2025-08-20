@@ -219,6 +219,13 @@ func main() {
 
 		return c.Redirect(http.StatusTemporaryRedirect, "/block/"+query)
 	})
+	e.GET("/supply", func(c echo.Context) error {
+		infoRes, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
+		return c.String(http.StatusOK, strconv.FormatUint(infoRes.CirculatingSupply, 10))
+	})
 
 	e.Static("/", "./static/")
 
