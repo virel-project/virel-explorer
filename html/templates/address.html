@@ -88,12 +88,12 @@
 							<!-- Hash -->
 							<td style="max-width:20vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
 							<!-- Sender -->
-							<td>{{ if .Tx.Coinbase }}Coinbase
+							<td style="max-width:20vw;">{{ if .Tx.Coinbase }}Coinbase
 								{{ else if .Tx.Sender }}
-								<a href="/account/{{ .Tx.Sender }}">{{ .Tx.Sender }}</a>
+								<a href="/account/{{ .Tx.Sender }}" class="hash">{{ .Tx.Sender }}</a>
 								{{ else }}Unknown{{ end }}</td>
 							<!-- Amount -->
-							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
+							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} <span class="is-size-7">VRL</span></td>
 						</tr>
 
 						<!-- Outgoing Transaction -->
@@ -109,8 +109,8 @@
 							<td colspan="3"></td>
 							{{ end }}
 
-							<td style="text-wrap: nowrap;"><a href="/account/{{.Recipient}}">{{ .Recipient }}</a></td>
-							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} VRL</td>
+							<td style="text-wrap: nowrap; max-width:20vw;"><a href="/account/{{.Recipient}}" class="hash">{{ .Recipient }}</a></td>
+							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} <span class="is-size-7">VRL</span></td>
 						</tr>
 						{{ end }} <!-- End of outputs range -->
 						{{ end }} <!-- End of if else transfer_type -->
