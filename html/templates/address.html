@@ -70,16 +70,23 @@
 						<th>Time</th>
 						<th>Height</th>
                 		<th>Hash</th>
+						{{ if eq $.TransferType "incoming" }}<th>Sender</th>{{ end }}
 						<th>Amount</th>
                     </tr>
                 </thead>
                 <tbody>
 					{{ range .TxList }}
                     <tr>
-						<td>{{ index $.BlockTimes .Tx.Height }}</td>
+						<td style="text-wrap: nowrap;">{{ index $.BlockTimes .Tx.Height }}</td>
 						<td>{{ .Tx.Height }}</td>
                     	<td style="max-width:50vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
-						<td>{{ fmt_coin .Tx.TotalAmount }} VRL</td>
+						{{ if eq $.TransferType "incoming" }}
+						<td>{{ if .Tx.Coinbase }}Coinbase
+							{{ else if .Tx.Sender }}
+							<a href="/account/{{ .Tx.Sender }}">{{ .Tx.Sender }}</a>
+							{{ else }}Unknown{{ end }}</td>
+						{{ end }}
+						<td style="text-wrap: nowrap;">{{ fmt_coin .Tx.TotalAmount }} VRL</td>
                     </tr>
                     {{ end }}
                 </tbody>
