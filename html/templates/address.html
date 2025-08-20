@@ -94,7 +94,7 @@
 							<!-- Sender -->
 							<td style="max-width:20vw;">{{ if .Tx.Coinbase }}Coinbase
 								{{ else if .Tx.Sender }}
-								<a href="/account/{{ .Tx.Sender }}" class="hash">{{ .Tx.Sender }}</a>
+								<a href="/account/{{ .Tx.Sender }}" class="hash">{{ entity .Tx.Sender.String }}</a>
 								{{ else }}Unknown{{ end }}</td>
 							<!-- Amount -->
 							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} <span class="is-size-7">VRL</span></td>
@@ -113,7 +113,7 @@
 							<td colspan="3"></td>
 							{{ end }}
 
-							<td style="text-wrap: nowrap; max-width:20vw;"><a href="/account/{{.Recipient}}" class="hash">{{ .Recipient }}</a></td>
+							<td style="text-wrap: nowrap; max-width:20vw;"><a href="/account/{{.Recipient}}" class="hash">{{ entity .Recipient.String }}</a></td>
 							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} <span class="is-size-7">VRL</span></td>
 						</tr>
 						{{ end }} <!-- End of outputs range -->
