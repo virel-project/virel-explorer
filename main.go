@@ -189,7 +189,7 @@ func main() {
 					if transferType == "incoming" {
 						var sum uint64
 						for _, o := range txRes.Outputs {
-							if o.Recipient == addr.Addr && o.PaymentId == addr.PaymentId {
+							if o.Recipient == addr.Addr {
 								sum += o.Amount
 							}
 						}
