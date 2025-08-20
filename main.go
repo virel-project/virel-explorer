@@ -37,6 +37,9 @@ func main() {
 			Blocks: bls.GetList(),
 		})
 	})
+	e.GET("/richlist", func(c echo.Context) error {
+		return html.RichList(c, html.RichListParams{})
+	})
 	e.GET("/block/:bl", func(c echo.Context) error {
 		bl := c.Param("bl")
 
@@ -118,7 +121,7 @@ func main() {
 		addr.PaymentId = 0
 
 		addrInfo, err := d.GetAddress(daemonrpc.GetAddressRequest{
-			Address: addr,
+			Address: addr.String(),
 		})
 		if err != nil {
 			return err

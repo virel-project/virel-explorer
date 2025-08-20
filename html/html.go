@@ -109,6 +109,20 @@ func Transaction(c echo.Context, p TransactionParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+type RichListParams struct {
+}
+
+func RichList(c echo.Context, p RichListParams) error {
+	b := bytes.NewBuffer([]byte{})
+	err := parse("richlist.html").Execute(b, p)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return c.HTMLBlob(200, b.Bytes())
+}
+
 type AddressParams struct {
 	Address string
 	Info    *daemonrpc.GetAddressResponse
