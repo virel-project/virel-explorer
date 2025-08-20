@@ -4,4 +4,31 @@
 
 {{ block "header" . }}{{end}}
 
+<section class="section">
+    <div class="container">
+        <h2 class="title is-4">Rich List</h2>
+
+        <table class="table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Address</th>
+                    <th>Balance</th>
+                    <th>%</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .List }}
+                <tr>
+                    <td>{{ .Rank }}</td>
+                    <td style="max-width:50vw;"><a href="/account/{{ .Address }}" class="hash">{{ .Address }}</a></td>
+                    <td>{{ fmt_coin .Balance }}</td>
+                    <td>{{ printf "%.2f" .Percent }}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+</section>
+
 {{ end }}

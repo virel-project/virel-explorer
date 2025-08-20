@@ -109,7 +109,16 @@ func Transaction(c echo.Context, p TransactionParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+/* * Rich List * */
+type RichListItem struct {
+	Rank    int
+	Address string
+	Balance uint64
+	Percent float64
+}
+
 type RichListParams struct {
+	List []RichListItem
 }
 
 func RichList(c echo.Context, p RichListParams) error {
