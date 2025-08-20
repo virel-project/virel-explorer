@@ -7,7 +7,11 @@
 <section class="section">
 	<div class="container">
 		<h2 class="title is-4">
+			{{ if eq .Address entity .Address}}
 			Account {{.Address}}
+			{{ else }}
+			Account {{.Address}} ({{entity .Address}})
+			{{ end }}
 		</h2>
 
 		<div class="container-fluid">

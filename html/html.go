@@ -9,16 +9,12 @@ import (
 	"time"
 	"virel-explorer/util"
 
+	"github.com/virel-project/virel-blockchain/address"
 	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
 	sutil "github.com/virel-project/virel-blockchain/util"
 
 	"github.com/labstack/echo/v4"
 )
-
-/*
-//go:embed templates/*
-var files embed.FS
-*/
 
 func parse(file string) *template.Template {
 	// const path = "templates/"
@@ -56,6 +52,14 @@ var funcs = template.FuncMap{
 	},
 	"sub": func(a, b uint64) uint64 {
 		return a - b
+	},
+	"entity": func(a address.Address) string {
+		s := a.String()
+
+		if len(Entities[s]) > 0 {
+			return Entities[s]
+		}
+		return s
 	},
 }
 
