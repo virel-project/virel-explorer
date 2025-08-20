@@ -128,9 +128,7 @@
 				<!-- if page > 1 ? is-primary : is-static-->
 				<a class="button {{ if isGreater .Page 1 }}is-primary{{ else }}is-static{{ end }}"
 					title="First page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}">
-					<span class="icon">
-						<i class="fas fa-angle-double-left"></i>
-					</span>
+					<span style="transform: scale(2) translateY(-0.125rem);">«</span>
 				</a>
 
 				<!-- Previous button-->
@@ -146,9 +144,7 @@
 				<!-- if page <= maxPage - 2 ? is-primary : is-static -->
 				<a class="button {{ if and (isGreater .MaxPage 3) (le .Page (sub .MaxPage 2)) }}is-primary{{ else }}is-static{{ end }}" 
 					title="Last page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{.MaxPage}}">
-					<span class="icon">
-						<i class="fas fa-angle-double-right"></i>
-					</span>
+					<span style="transform: scale(2) translateY(-0.125rem);">»</span>
 				</a>
             </div>
 
