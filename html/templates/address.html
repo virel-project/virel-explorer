@@ -142,7 +142,7 @@
 
 				<!-- Last button -->
 				<!-- if page <= maxPage - 2 ? is-primary : is-static -->
-				<a class="button {{ if and (isGreater .MaxPage 3) (le .Page (sub .MaxPage 2)) }}is-primary{{ else }}is-static{{ end }}" 
+				<a class="button {{ if and (isGreater .MaxPage 2) (le .Page (sub .MaxPage 2)) }}is-primary{{ else }}is-static{{ end }}" 
 					title="Last page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{.MaxPage}}">
 					<span style="transform: scale(2) translateY(-0.125rem);">»</span>
 				</a>
