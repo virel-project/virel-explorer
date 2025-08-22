@@ -26,7 +26,7 @@
 				{{if .Tx.Sender}}
 				<a class="is-flex-grow-1 has-text-right hash" style="max-width:70%;"
 					href="/account/{{.Tx.Sender}}">
-					{{.Tx.Sender}}
+					{{entity .Tx.Sender.Addr.String }}
 				</a>
 				{{else if .Tx.Coinbase}}
 				<span class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">Coinbase</span>
@@ -74,9 +74,20 @@
 					</div>
 					<a class="is-flex-grow-1 has-text-right hash" style="max-width:70%;"
 						href="/account/{{.Recipient}}">
-						{{.Recipient}}
+						{{entity .Recipient.String }}
 					</a>
 				</div>
+				{{ if .PaymentId }}
+				<div class="is-flex">
+					<div class="is-flex-grow-1">
+						Payment id
+					</div>
+					<span class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+						{{ .PaymentId }}
+					</span>
+				</div>
+				{{ end }}
+
 				<div class="is-flex">
 					<div class="is-flex-grow-1">
 						Amount
