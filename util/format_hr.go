@@ -4,7 +4,7 @@ import "strconv"
 
 func Unit(h float64) string {
 	if h > 1000*1000*1000 {
-		return strconv.FormatFloat(h/1000/1000/1000, 'f', 2, 64) + "M"
+		return strconv.FormatFloat(h/1000/1000/1000, 'f', 2, 64) + "G"
 	} else if h > 1000*1000 {
 		return strconv.FormatFloat(h/1000/1000, 'f', 2, 64) + "M"
 	} else if h > 1000 {

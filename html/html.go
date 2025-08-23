@@ -194,7 +194,7 @@ func (i *InfoRes) Reward() string {
 func formatNumber(n float64) string {
 	switch {
 	case n >= 1_000_000_000:
-		return strconv.FormatFloat(n/1_000_000_000, 'f', 2, 64) + "B"
+		return strconv.FormatFloat(n/1_000_000_000, 'f', 2, 64) + "G"
 	case n >= 1_000_000:
 		return strconv.FormatFloat(n/1_000_000, 'f', 2, 64) + "M"
 	case n >= 1_000:
