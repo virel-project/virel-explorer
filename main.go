@@ -261,7 +261,7 @@ func main() {
 		if err != nil {
 			return err
 		}
-		return c.String(http.StatusOK, strconv.FormatUint(infoRes.CirculatingSupply, 10))
+		return c.String(http.StatusOK, fmt.Sprintf("%.2f", float64(infoRes.CirculatingSupply)/float64(infoRes.Coin)))
 	})
 
 	e.Static("/", "./static/")
