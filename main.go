@@ -263,6 +263,13 @@ func main() {
 		}
 		return c.String(http.StatusOK, fmt.Sprintf("%.2f", float64(infoRes.CirculatingSupply)/float64(infoRes.Coin)))
 	})
+	e.GET("/supply_rest", func(c echo.Context) error {
+		infoRes, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
+		return c.JSON(http.StatusOK, map[string]any{"result": fmt.Sprintf("%.2f", float64(infoRes.CirculatingSupply)/float64(infoRes.Coin))})
+	})
 
 	e.Static("/", "./static/")
 
