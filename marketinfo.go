@@ -1,18 +1,15 @@
 package main
 
 import (
-	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"time"
 	"virel-explorer/html"
 
 	"github.com/virel-project/virel-blockchain/v2/config"
-	"golang.org/x/net/proxy"
 )
 
 type coinpaprikaResponse struct {
@@ -24,12 +21,6 @@ type coinpaprikaResponse struct {
 }
 
 func GetMarketInfo(supply uint64) (*html.MarketInfo, error) {
-	// Create a SOCKS5 dialer
-	dialer, err := proxy.SOCKS5("tcp", "127.0.0.1:9050", nil, proxy.Direct)
-	if err != nil {
-		panic(err)
-	}
-
 	// Create HTTP client with timeout
 	client := &http.Client{
 		Timeout: 10 * time.Second,
@@ -38,9 +29,6 @@ func GetMarketInfo(supply uint64) (*html.MarketInfo, error) {
 		MaxIdleConns:       10,
 		IdleConnTimeout:    30 * time.Second,
 		DisableCompression: false,
-		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
-			return dialer.Dial(network, addr)
-		},
 		TLSClientConfig: &tls.Config{
 			MinVersion: tls.VersionTLS13,
 		},
