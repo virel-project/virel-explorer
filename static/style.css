@@ -5,7 +5,7 @@
 }
 
 .box {
-	background-color: hsla(var(--bulma-text-h),var(--bulma-text-s),var(--bulma-text-weak-l),3%);
+	background-color: hsla(var(--bulma-text-h), var(--bulma-text-s), var(--bulma-text-weak-l), 3%);
 }
 
 .info-card {
@@ -37,10 +37,12 @@
 .blockinfos {
 	flex-wrap: wrap;
 }
+
 .blockinfo-left {
 	flex: 75%;
 	max-width: 100%;
 }
+
 .blockinfo-right {
 	flex: 25%;
 	padding: 1rem;
@@ -48,18 +50,30 @@
 	flex-wrap: wrap;
 	max-height: 140px;
 }
+
 .blockinfo-right>* {
 	flex: 50%;
 	min-width: 200px;
 	padding: 0px 0.25rem;
 }
+
 .blockinfo-right>*>* {
 	width: 100%;
 }
-@media screen and (max-width: 768px){
+
+.importantanchor {
+	font-weight: bold;
+	font-size: 1.2em;
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-decoration-color: var(--bulma-link-text);
+}
+
+@media screen and (max-width: 768px) {
 	.blockinfo-right {
 		flex-wrap: nowrap;
 	}
+
 	.blockinfo-right>* {
 		min-width: 100px;
 	}
