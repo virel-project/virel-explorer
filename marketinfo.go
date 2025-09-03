@@ -76,7 +76,7 @@ func GetMarketInfo(supply uint64) (*html.MarketInfo, error) {
 	minf.Price = usdq.Price
 
 	minf.Supply = (float64(supply) / config.COIN)
-	minf.Marketcap = minf.Price * (float64(supply) / config.COIN)
+	minf.Marketcap = minf.Price * minf.Supply
 
 	return minf, nil
 }

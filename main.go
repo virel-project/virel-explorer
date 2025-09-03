@@ -10,6 +10,7 @@ import (
 	"virel-explorer/html"
 
 	"github.com/virel-project/virel-blockchain/v2/address"
+	"github.com/virel-project/virel-blockchain/v2/config"
 	"github.com/virel-project/virel-blockchain/v2/rpc/daemonrpc"
 	"github.com/virel-project/virel-blockchain/v2/util"
 
@@ -49,12 +50,12 @@ func main() {
 			items[i] = html.RichListItem{
 				Rank:    i + 1,
 				Address: st.Address,
-				Balance: st.State.Balance,
+				Balance: float64(st.State.Balance) / config.COIN,
 				Percent: func() float64 {
 					if updaterOut.MarketInfo.Supply == 0 {
 						return 0
 					}
-					return float64(st.State.Balance) / float64(updaterOut.MarketInfo.Supply) * 100
+					return float64(st.State.Balance) / config.COIN / float64(updaterOut.MarketInfo.Supply) * 100
 				}(),
 			}
 		}

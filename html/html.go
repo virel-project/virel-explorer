@@ -115,7 +115,7 @@ func Transaction(c echo.Context, p TransactionParams) error {
 type RichListItem struct {
 	Rank    int
 	Address string
-	Balance uint64
+	Balance float64
 	Percent float64
 }
 
