@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"math"
 	"strconv"
 	"strings"
 	"time"
 	"virel-explorer/util"
 
-	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
-	sutil "github.com/virel-project/virel-blockchain/util"
+	"github.com/virel-project/virel-blockchain/v2/rpc/daemonrpc"
+	sutil "github.com/virel-project/virel-blockchain/v2/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -118,13 +119,41 @@ type RichListItem struct {
 	Percent float64
 }
 
-type RichListParams struct {
-	List []RichListItem
+type MarketInfo struct {
+	Price     float64
+	Marketcap float64
+	Supply    float64
+	Change    string
 }
 
-func RichList(c echo.Context, p RichListParams) error {
+func (m *MarketInfo) IsPositiveChange() bool {
+	return strings.HasPrefix(m.Change, "+")
+}
+func (m *MarketInfo) FormatPrice() string {
+	return strconv.FormatFloat(m.Price, 'f', 4, 64) + " $"
+}
+func (m *MarketInfo) FormatMarketcap() string {
+	mkt := math.Round(m.Marketcap)
+
+	if mkt > 1_000_000 {
+		return strconv.FormatFloat(mkt/1_000_000, 'f', 2, 64) + "M $"
+	}
+	if mkt > 1_000 {
+		return strconv.FormatFloat(mkt/1_000, 'f', 2, 64) + "k $"
+	}
+
+	return strconv.FormatFloat(m.Marketcap, 'f', 0, 64) + " $"
+}
+
+type StatsParams struct {
+	RichList []RichListItem
+	Info     *InfoRes
+	Market   *MarketInfo
+}
+
+func Stats(c echo.Context, p StatsParams) error {
 	b := bytes.NewBuffer([]byte{})
-	err := parse("richlist.html").Execute(b, p)
+	err := parse("stats.html").Execute(b, p)
 	if err != nil {
 		fmt.Println(err)
 		return err

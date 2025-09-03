@@ -9,9 +9,9 @@ import (
 	"strings"
 	"virel-explorer/html"
 
-	"github.com/virel-project/virel-blockchain/address"
-	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
-	"github.com/virel-project/virel-blockchain/util"
+	"github.com/virel-project/virel-blockchain/v2/address"
+	"github.com/virel-project/virel-blockchain/v2/rpc/daemonrpc"
+	"github.com/virel-project/virel-blockchain/v2/util"
 
 	"github.com/labstack/echo/v4"
 )
@@ -24,8 +24,8 @@ func main() {
 	bls := NewBlocks(d)
 	go bls.Updater()
 
-	rl := NewRichList(d)
-	go rl.Updater()
+	updater := NewUpdater(d)
+	go updater.Updater()
 
 	e := echo.New()
 
@@ -40,26 +40,35 @@ func main() {
 			Blocks: bls.GetList(),
 		})
 	})
-	e.GET("/richlist", func(c echo.Context) error {
-		list, supply := rl.Get()
-		items := make([]html.RichListItem, len(list))
+	e.GET("/stats", func(c echo.Context) error {
+		updaterOut := updater.Get()
 
-		for i, st := range list {
+		items := make([]html.RichListItem, len(updaterOut.RichList))
+
+		for i, st := range updaterOut.RichList {
 			items[i] = html.RichListItem{
 				Rank:    i + 1,
 				Address: st.Address,
 				Balance: st.State.Balance,
 				Percent: func() float64 {
-					if supply == 0 {
+					if updaterOut.MarketInfo.Supply == 0 {
 						return 0
 					}
-					return float64(st.State.Balance) / float64(supply) * 100
+					return float64(st.State.Balance) / float64(updaterOut.MarketInfo.Supply) * 100
 				}(),
 			}
 		}
+		info, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
 
-		return html.RichList(c, html.RichListParams{
-			List: items,
+		ir := html.InfoRes(*info)
+
+		return html.Stats(c, html.StatsParams{
+			RichList: items,
+			Market:   updaterOut.MarketInfo,
+			Info:     &ir,
 		})
 	})
 	e.GET("/block/:bl", func(c echo.Context) error {

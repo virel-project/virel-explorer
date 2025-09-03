@@ -1,0 +1,90 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+
+{{ block "header" . }}{{end}}
+
+<section class="section">
+	<div class="container">
+		<h2 class="title is-4">Stats</h2>
+		<div class="is-flex is-flex-wrap-wrap">
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Height
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Height}}
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Hashrate
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Hashrate}}
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Reward
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Reward}}
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Supply
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Circulating}} ({{.Info.CirculatingPercent}})
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Price
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Market.FormatPrice}} <span style="color:{{if .Market.IsPositiveChange}}#00b33c{{else}}#cc0000{{end}};">({{.Market.Change}})</span>
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Marketcap
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Market.FormatMarketcap}}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<h2 class="title is-4">Rich List</h2>
+
+		<div class="table-container">
+			<table class="table is-striped is-hoverable is-fullwidth">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Address</th>
+						<th>Balance</th>
+						<th>%</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{ range .RichList }}
+					<tr>
+						<td>{{ .Rank }}</td>
+						<td style="max-width:50vw;"><a href="/account/{{ .Address }}" class="hash">{{ entity .Address }}</a></td>
+						<td>{{ fmt_coin .Balance }}</td>
+						<td>{{ printf "%.2f" .Percent }}</td>
+					</tr>
+					{{ end }}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>
+
+{{ end }}

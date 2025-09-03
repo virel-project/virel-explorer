@@ -4,22 +4,23 @@ import (
 	"fmt"
 	"sync"
 	"time"
+	"virel-explorer/html"
 
-	"github.com/virel-project/virel-blockchain/rpc/daemonrpc"
+	"github.com/virel-project/virel-blockchain/v2/rpc/daemonrpc"
 )
 
-type RichList struct {
-	mut    sync.RWMutex
-	client *daemonrpc.RpcClient
-	list   []daemonrpc.StateInfo
-	supply uint64
+type Updater struct {
+	mut        sync.RWMutex
+	client     *daemonrpc.RpcClient
+	list       []daemonrpc.StateInfo
+	marketinfo *html.MarketInfo
 }
 
-func NewRichList(cl *daemonrpc.RpcClient) *RichList {
-	return &RichList{client: cl}
+func NewUpdater(cl *daemonrpc.RpcClient) *Updater {
+	return &Updater{client: cl}
 }
 
-func (r *RichList) Updater() {
+func (r *Updater) Updater() {
 	ticker := time.NewTicker(time.Minute)
 	for {
 		if err := r.update(); err != nil {
@@ -29,16 +30,25 @@ func (r *RichList) Updater() {
 	}
 }
 
-func (r *RichList) Get() ([]daemonrpc.StateInfo, uint64) {
+type UpdaterOutput struct {
+	RichList   []daemonrpc.StateInfo
+	MarketInfo *html.MarketInfo
+}
+
+func (r *Updater) Get() UpdaterOutput {
 	r.mut.RLock()
 	defer r.mut.RUnlock()
 
 	out := make([]daemonrpc.StateInfo, len(r.list))
 	copy(out, r.list)
-	return out, r.supply
+
+	return UpdaterOutput{
+		RichList:   out,
+		MarketInfo: r.marketinfo,
+	}
 }
 
-func (r *RichList) update() error {
+func (r *Updater) update() error {
 	info, err := r.client.GetInfo(daemonrpc.GetInfoRequest{})
 	if err != nil {
 		return err
@@ -48,9 +58,14 @@ func (r *RichList) update() error {
 		return err
 	}
 
+	mkt, err := GetMarketInfo(info.CirculatingSupply)
+	if err != nil {
+		return err
+	}
+
 	r.mut.Lock()
 	r.list = res.Richest
-	r.supply = info.CirculatingSupply
+	r.marketinfo = mkt
 	r.mut.Unlock()
 
 	return nil
