@@ -26,21 +26,22 @@ func (bl *Blocks) Updater() {
 	var adj float64
 	var n float64
 	for {
-		n = min(n+1, 100)
-
 		bl.mut.Lock()
 		updated, adj2, err := bl.update(adj)
 		bl.mut.Unlock()
 		if err != nil {
 			fmt.Println("failed to update:", err)
 		}
-		if adj == 0 {
-			adj = adj2
-		} else {
-			adj = (adj*n + adj2) / (n + 1)
+		if adj != adj2 {
+			n = min(n+1, 100)
+			if adj == 0 {
+				adj = adj2
+			} else {
+				adj = (adj*n + adj2) / (n + 1)
+			}
+			adj = min(max(adj, -30_000), 30_000) // limit timestamp adjustment to 30 seconds
+			fmt.Println("adj2:", adj2, "adj:", adj)
 		}
-		adj = min(max(adj, -30_000), 30_000) // limit timestamp adjustment to 30 seconds
-		fmt.Println("adj2:", adj2, "adj:", adj)
 		if !updated {
 			time.Sleep(2 * time.Second)
 		}
