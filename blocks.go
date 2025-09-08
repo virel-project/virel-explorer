@@ -23,8 +23,11 @@ func NewBlocks(cl *daemonrpc.RpcClient) *Blocks {
 }
 
 func (bl *Blocks) Updater() {
-	var adj int64
+	var adj float64
+	var n float64
 	for {
+		n = min(n+1, 100)
+
 		bl.mut.Lock()
 		updated, adj2, err := bl.update(adj)
 		bl.mut.Unlock()
@@ -34,7 +37,7 @@ func (bl *Blocks) Updater() {
 		if adj == 0 {
 			adj = adj2
 		} else {
-			adj = (adj*10 + adj2) / 11
+			adj = (adj*n + adj2) / (n + 1)
 		}
 		adj = min(max(adj, -30_000), 30_000) // limit timestamp adjustment to 30 seconds
 		fmt.Println("adj2:", adj2, "adj:", adj)
@@ -51,7 +54,7 @@ func (b *Blocks) GetList() []*daemonrpc.GetBlockResponse {
 
 	return b.blocks
 }
-func (b *Blocks) update(adj int64) (bool, int64, error) {
+func (b *Blocks) update(adj float64) (bool, float64, error) {
 	info, err := b.client.GetInfo(daemonrpc.GetInfoRequest{})
 	if err != nil {
 		return false, adj, err
@@ -66,7 +69,7 @@ func (b *Blocks) update(adj int64) (bool, int64, error) {
 	if b.height < info.Height {
 		b.height++
 
-		adj := int64(0)
+		adj := float64(0)
 
 		bl, err := b.client.GetBlockByHeight(daemonrpc.GetBlockByHeightRequest{
 			Height: b.height,
@@ -76,9 +79,9 @@ func (b *Blocks) update(adj int64) (bool, int64, error) {
 		}
 
 		if b.height == info.Height {
-			adj = int64(bl.Block.Timestamp) - time.Now().UnixMilli()
+			adj = float64(bl.Block.Timestamp) - float64(time.Now().UnixMilli())
 		}
-		bl.Block.Timestamp = uint64(int64(bl.Block.Timestamp) - adj)
+		bl.Block.Timestamp = uint64(float64(bl.Block.Timestamp) - adj)
 
 		b.blocks = append([]*daemonrpc.GetBlockResponse{bl}, b.blocks...)
 		if len(b.blocks) > MAX_BLOCKS_HISTORY {
