@@ -93,8 +93,8 @@
 							<td style="max-width:20vw;"><a href="/tx/{{.Txid}}" class="hash">{{.Txid}}</a></td>
 							<!-- Sender -->
 							<td style="max-width:20vw;">{{ if .Tx.Coinbase }}Coinbase
-								{{ else if .Tx.Sender }}
-								<a href="/account/{{ .Tx.Sender }}" class="hash">{{ entity .Tx.Sender.String }}</a>
+								{{ else if .Tx.Signer }}
+								<a href="/account/{{ .Tx.Signer }}" class="hash">{{ entity .Tx.Signer.String }}</a>
 								{{ else }}Unknown{{ end }}</td>
 							<!-- Amount -->
 							<td style="text-wrap: nowrap;">{{ fmt_coin .Amount }} <span class="is-size-7">VRL</span></td>
