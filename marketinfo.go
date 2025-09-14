@@ -9,7 +9,7 @@ import (
 	"time"
 	"virel-explorer/html"
 
-	"github.com/virel-project/virel-blockchain/v2/config"
+	"github.com/virel-project/virel-blockchain/v3/config"
 )
 
 type coinpaprikaResponse struct {

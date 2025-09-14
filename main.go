@@ -9,10 +9,10 @@ import (
 	"strings"
 	"virel-explorer/html"
 
-	"github.com/virel-project/virel-blockchain/v2/address"
-	"github.com/virel-project/virel-blockchain/v2/config"
-	"github.com/virel-project/virel-blockchain/v2/rpc/daemonrpc"
-	"github.com/virel-project/virel-blockchain/v2/util"
+	"github.com/virel-project/virel-blockchain/v3/address"
+	"github.com/virel-project/virel-blockchain/v3/config"
+	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
+	"github.com/virel-project/virel-blockchain/v3/util"
 
 	"github.com/labstack/echo/v4"
 )

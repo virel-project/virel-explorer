@@ -10,8 +10,8 @@ import (
 	"time"
 	"virel-explorer/util"
 
-	"github.com/virel-project/virel-blockchain/v2/rpc/daemonrpc"
-	sutil "github.com/virel-project/virel-blockchain/v2/util"
+	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
+	sutil "github.com/virel-project/virel-blockchain/v3/util"
 
 	"github.com/labstack/echo/v4"
 )

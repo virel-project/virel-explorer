@@ -23,8 +23,8 @@ github.com/valyala/bytebufferpool v1.0.0 h1:GqA5TC/0021Y/b9FG4Oi9Mr3q7XYx6Kllzaw
 github.com/valyala/bytebufferpool v1.0.0/go.mod h1:6bBcMArwyJ5K/AmCkWv1jt77kVWyCJ6HpOuEn7z0Csc=
 github.com/valyala/fasttemplate v1.2.2 h1:lxLXG0uE3Qnshl9QyaK6XJxMXlQZELvChBOCmQD0Loo=
 github.com/valyala/fasttemplate v1.2.2/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
-github.com/virel-project/virel-blockchain/v2 v2.0.2 h1:h8Z1mupGOTMk3cXOivT4Nla9nwatmjHmNMj6LsPW/dE=
-github.com/virel-project/virel-blockchain/v2 v2.0.2/go.mod h1:Cs303PgNnKfx7QDMiDIplQrEelb+lxGuUNUL6VZbHTo=
+github.com/virel-project/virel-blockchain/v3 v3.0.3 h1:RSBEGs09NId5tuPGkEWltKZwxGVX8tDObdBvPN/dglI=
+github.com/virel-project/virel-blockchain/v3 v3.0.3/go.mod h1:ojlK2lwMq0CjyEhj8EmFB7ft2/KznaniFTno8aHNbSk=
 github.com/zeebo/assert v1.3.1 h1:vukIABvugfNMZMQO1ABsyQDJDTVQbn+LWSMy1ol1h6A=
 github.com/zeebo/assert v1.3.1/go.mod h1:Pq9JiuJQpG8JLJdtkwrJESF0Foym2/D9XMU5ciN/wJ0=
 github.com/zeebo/blake3 v0.2.4 h1:KYQPkhpRtcqh0ssGYcKLG1JYvddkEA8QwCM/yBqhaZI=

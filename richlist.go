@@ -6,7 +6,7 @@ import (
 	"time"
 	"virel-explorer/html"
 
-	"github.com/virel-project/virel-blockchain/v2/rpc/daemonrpc"
+	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
 )
 
 type Updater struct {
