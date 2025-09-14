@@ -23,7 +23,7 @@
 				<div class="is-flex-grow-1">
 					Signer
 				</div>
-				{{if .Tx.Sender}}
+				{{if .Tx.Signer}}
 				<a class="is-flex-grow-1 has-text-right hash" style="max-width:70%;"
 					href="/account/{{.Tx.Signer}}">
 					{{entity .Tx.Signer.Addr.String }}
