@@ -96,8 +96,9 @@ func Block(c echo.Context, p BlockParams) error {
 }
 
 type TransactionParams struct {
-	Tx   *daemonrpc.GetTransactionResponse
-	Txid string
+	Tx    *daemonrpc.GetTransactionResponse
+	Txid  string
+	Confs uint64
 }
 
 func Transaction(c echo.Context, p TransactionParams) error {

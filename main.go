@@ -133,9 +133,15 @@ func main() {
 			return c.Redirect(http.StatusTemporaryRedirect, "/block/"+txid)
 		}
 
+		var confs uint64 = 0
+		if res.Height != 0 && res.Height <= bls.height {
+			confs = bls.height - res.Height + 1
+		}
+
 		err = html.Transaction(c, html.TransactionParams{
-			Tx:   res,
-			Txid: txid,
+			Tx:    res,
+			Txid:  txid,
+			Confs: confs,
 		})
 		if err != nil {
 			fmt.Println(err)
