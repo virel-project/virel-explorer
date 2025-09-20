@@ -19,6 +19,12 @@
 	margin: 0px !important;
 }
 
+.info-btn {
+	height: 40px !important;
+	font-size: 1.25em;
+	padding: 0.25rem;
+}
+
 .mono {
 	font-family: monospace;
 	font-weight: normal;
