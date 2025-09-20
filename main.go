@@ -74,6 +74,45 @@ func main() {
 			Info:     &ir,
 		})
 	})
+	e.GET("/delegates.json", func(c echo.Context) error {
+		knownDelegates := bls.GetDelegates()
+
+		info, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
+
+		ir := html.InfoRes(*info)
+
+		delegs := make([]*html.Delegate, 0, len(knownDelegates))
+
+		for _, v := range knownDelegates {
+			fmt.Println("missed:", v.BlocksMissed, "staked:", v.BlocksStaked)
+			totStaked := max(v.BlocksMissed+v.BlocksStaked, 1)
+
+			addr := address.NewDelegateAddress(v.Id).String()
+
+			delegateInfo, err := d.GetDelegate(daemonrpc.GetDelegateRequest{
+				DelegateAddress: addr,
+			})
+			if err != nil {
+				return err
+			}
+
+			delegs = append(delegs, &html.Delegate{
+				Address:        addr,
+				Balance:        float64(delegateInfo.TotalAmount) / config.COIN,
+				BalancePercent: float64(delegateInfo.TotalAmount) / float64(ir.Stake) * 100,
+				UptimePercent:  float64(v.BlocksStaked) / float64(totStaked) * 100,
+			})
+		}
+
+		slices.SortFunc(delegs, func(a, b *html.Delegate) int {
+			return cmp.Compare(a.UptimePercent+b.BalancePercent/2, b.UptimePercent+b.BalancePercent/2)
+		})
+
+		return c.JSON(200, delegs)
+	})
 	e.GET("/delegates", func(c echo.Context) error {
 		knownDelegates := bls.GetDelegates()
 
