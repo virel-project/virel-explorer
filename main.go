@@ -72,6 +72,40 @@ func main() {
 			Info:     &ir,
 		})
 	})
+	e.GET("/delegates", func(c echo.Context) error {
+		updaterOut := updater.Get()
+
+		info, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
+
+		ir := html.InfoRes(*info)
+
+		delegs := make([]*html.Delegate, 0, len(updaterOut.KnownDelegates))
+
+		for _, v := range updaterOut.KnownDelegates {
+			totStaked := max(v.BlocksMissed+v.BlocksStaked, 1)
+
+			delegateInfo, err := d.GetDelegate(daemonrpc.GetDelegateRequest{
+				DelegateAddress: v.Address,
+			})
+			if err != nil {
+				return err
+			}
+
+			delegs = append(delegs, &html.Delegate{
+				Address:        v.Address,
+				Balance:        float64(delegateInfo.TotalAmount) / config.COIN,
+				BalancePercent: float64(delegateInfo.TotalAmount) / float64(ir.Stake) * 100,
+				UptimePercent:  float64(v.BlocksStaked) / float64(totStaked) * 100,
+			})
+		}
+
+		return html.Delegates(c, html.DelegatesParams{
+			Delegates: delegs,
+		})
+	})
 	e.GET("/block/:bl", func(c echo.Context) error {
 		bl := c.Param("bl")
 

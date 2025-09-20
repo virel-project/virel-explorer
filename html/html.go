@@ -241,3 +241,25 @@ func (i *InfoRes) Circulating() string {
 func (i *InfoRes) CirculatingPercent() string {
 	return strconv.FormatFloat(float64(i.CirculatingSupply)/float64(i.MaxSupply)*100, 'f', 2, 64) + "%"
 }
+
+type DelegatesParams struct {
+	Delegates []*Delegate
+}
+
+type Delegate struct {
+	Address        string
+	Balance        float64
+	BalancePercent float64
+	UptimePercent  float64
+}
+
+func Delegates(c echo.Context, p DelegatesParams) error {
+	b := bytes.NewBuffer([]byte{})
+	err := parse("delegates.html").Execute(b, p)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return c.HTMLBlob(200, b.Bytes())
+}

@@ -1,0 +1,35 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+
+{{ block "header" . }}{{end}}
+
+<section class="section py-3">
+	<div class="container">
+		<h2 class="title is-4">Delegates</h2>
+
+		<div class="table-container">
+			<table class="table is-striped is-hoverable is-fullwidth">
+				<thead>
+					<tr>
+						<th>Address</th>
+						<th>Stake</th>
+						<th>Network share</th>
+						<th>Uptime</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{ range .Delegates }}
+					<tr>
+						<td style="max-width:50vw;"><a href="/delegate/{{ .Address }}" class="hash">.Address</a></td>
+						<td>{{ printf "%.0f" .Balance }}</td>
+						<td>{{ printf "%.2f" .Percent }}</td>
+					</tr>
+					{{ end }}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>
+
+{{ end }}
