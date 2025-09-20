@@ -22,7 +22,7 @@ import (
 const MAX_BLOCKS_HISTORY = 50
 
 func main() {
-	d := daemonrpc.NewRpcClient("http://127.0.0.1:16311")
+	d := daemonrpc.NewRpcClient("http://127.0.0.1:6311")
 
 	bls := NewBlocks(d)
 	go bls.Updater()
