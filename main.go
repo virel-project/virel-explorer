@@ -1,9 +1,11 @@
 package main
 
 import (
+	"cmp"
 	"encoding/hex"
 	"fmt"
 	"net/http"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
@@ -20,7 +22,7 @@ import (
 const MAX_BLOCKS_HISTORY = 50
 
 func main() {
-	d := daemonrpc.NewRpcClient("http://127.0.0.1:6311")
+	d := daemonrpc.NewRpcClient("http://127.0.0.1:16311")
 
 	bls := NewBlocks(d)
 	go bls.Updater()
@@ -73,7 +75,7 @@ func main() {
 		})
 	})
 	e.GET("/delegates", func(c echo.Context) error {
-		updaterOut := updater.Get()
+		knownDelegates := bls.GetDelegates()
 
 		info, err := d.GetInfo(daemonrpc.GetInfoRequest{})
 		if err != nil {
@@ -82,25 +84,32 @@ func main() {
 
 		ir := html.InfoRes(*info)
 
-		delegs := make([]*html.Delegate, 0, len(updaterOut.KnownDelegates))
+		delegs := make([]*html.Delegate, 0, len(knownDelegates))
 
-		for _, v := range updaterOut.KnownDelegates {
+		for _, v := range knownDelegates {
+			fmt.Println("missed:", v.BlocksMissed, "staked:", v.BlocksStaked)
 			totStaked := max(v.BlocksMissed+v.BlocksStaked, 1)
 
+			addr := address.NewDelegateAddress(v.Id).String()
+
 			delegateInfo, err := d.GetDelegate(daemonrpc.GetDelegateRequest{
-				DelegateAddress: v.Address,
+				DelegateAddress: addr,
 			})
 			if err != nil {
 				return err
 			}
 
 			delegs = append(delegs, &html.Delegate{
-				Address:        v.Address,
+				Address:        addr,
 				Balance:        float64(delegateInfo.TotalAmount) / config.COIN,
 				BalancePercent: float64(delegateInfo.TotalAmount) / float64(ir.Stake) * 100,
 				UptimePercent:  float64(v.BlocksStaked) / float64(totStaked) * 100,
 			})
 		}
+
+		slices.SortFunc(delegs, func(a, b *html.Delegate) int {
+			return cmp.Compare(a.UptimePercent+b.BalancePercent/2, b.UptimePercent+b.BalancePercent/2)
+		})
 
 		return html.Delegates(c, html.DelegatesParams{
 			Delegates: delegs,

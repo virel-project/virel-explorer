@@ -31,9 +31,8 @@ func (r *Updater) Updater() {
 }
 
 type UpdaterOutput struct {
-	RichList       []daemonrpc.StateInfo
-	KnownDelegates []*KnownDelegate
-	MarketInfo     *html.MarketInfo
+	RichList   []daemonrpc.StateInfo
+	MarketInfo *html.MarketInfo
 }
 
 func (r *Updater) Get() UpdaterOutput {

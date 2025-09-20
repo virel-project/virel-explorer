@@ -1,25 +1,44 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
+	"github.com/virel-project/virel-blockchain/v3/bitcrypto"
 	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
 )
 
 type Blocks struct {
-	mut    sync.RWMutex
-	client *daemonrpc.RpcClient
-	blocks []*daemonrpc.GetBlockResponse
-	height uint64
+	mut            sync.RWMutex
+	client         *daemonrpc.RpcClient
+	blocks         []*daemonrpc.GetBlockResponse
+	KnownDelegates []*KnownDelegate
+	height         uint64
 }
 
 func NewBlocks(cl *daemonrpc.RpcClient) *Blocks {
-	return &Blocks{
-		client: cl,
-		blocks: make([]*daemonrpc.GetBlockResponse, 0),
+	b := &Blocks{
+		client:         cl,
+		blocks:         make([]*daemonrpc.GetBlockResponse, 0),
+		KnownDelegates: make([]*KnownDelegate, 0),
 	}
+
+	delegates, err := os.ReadFile("delegates.json")
+	if err != nil {
+		fmt.Println(err)
+		return b
+	}
+
+	err = json.Unmarshal(delegates, &b)
+	if err != nil {
+		fmt.Println(err)
+		return b
+	}
+
+	return b
 }
 
 func (bl *Blocks) Updater() {
@@ -55,6 +74,12 @@ func (b *Blocks) GetList() []*daemonrpc.GetBlockResponse {
 
 	return b.blocks
 }
+func (b *Blocks) GetDelegates() []*KnownDelegate {
+	b.mut.RLock()
+	defer b.mut.RUnlock()
+
+	return b.KnownDelegates
+}
 func (b *Blocks) update(adj float64) (bool, float64, error) {
 	info, err := b.client.GetInfo(daemonrpc.GetInfoRequest{})
 	if err != nil {
@@ -77,6 +102,38 @@ func (b *Blocks) update(adj float64) (bool, float64, error) {
 		})
 		if err != nil {
 			return false, adj, err
+		}
+
+		if bl.Block.DelegateId != 0 {
+			var deleg *KnownDelegate
+			for _, v := range b.KnownDelegates {
+				if v.Id == bl.Block.DelegateId {
+					deleg = v
+				}
+			}
+			if deleg == nil {
+				deleg = &KnownDelegate{
+					Id: bl.Block.DelegateId,
+				}
+				b.KnownDelegates = append(b.KnownDelegates, deleg)
+			}
+			if deleg.LastHeight < bl.Block.Height {
+				deleg.LastHeight = bl.Block.Height
+				if bl.Block.StakeSignature == bitcrypto.BlankSignature {
+					deleg.BlocksMissed++
+				} else {
+					deleg.BlocksStaked++
+				}
+				delegs, err := json.Marshal(b.KnownDelegates)
+				if err != nil {
+					fmt.Println(err)
+				} else {
+					err = os.WriteFile("delegates.json", delegs, 0o660)
+					if err != nil {
+						fmt.Println(err)
+					}
+				}
+			}
 		}
 
 		if b.height == info.Height {
