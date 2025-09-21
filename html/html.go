@@ -239,7 +239,31 @@ func (i *InfoRes) Circulating() string {
 }
 
 func (i *InfoRes) CirculatingPercent() string {
-	return strconv.FormatFloat(float64(i.CirculatingSupply)/float64(i.MaxSupply)*100, 'f', 2, 64) + "%"
+	return strconv.FormatFloat(float64(i.CirculatingSupply)/float64(i.SupplyCap)*100, 'f', 2, 64) + "%"
+}
+
+func (i *InfoRes) TotalSupplyStr() string {
+	return formatNumber(float64(i.TotalSupply) / float64(i.Coin))
+}
+
+func (i *InfoRes) TotalSupplyPercent() string {
+	return strconv.FormatFloat(float64(i.TotalSupply)/float64(i.SupplyCap)*100, 'f', 2, 64) + "%"
+}
+
+func (i *InfoRes) BurnedStr() string {
+	return formatNumber(float64(i.Burned) / float64(i.Coin))
+}
+
+func (i *InfoRes) BurnedPercent() string {
+	return strconv.FormatFloat(float64(i.Burned)/float64(i.SupplyCap)*100, 'f', 2, 64) + "%"
+}
+
+func (i *InfoRes) MaxSupplyStr() string {
+	return formatNumber(float64(i.MaxSupply) / float64(i.Coin))
+}
+
+func (i *InfoRes) Cap() string {
+	return formatNumber(float64(i.SupplyCap) / float64(i.Coin))
 }
 
 type DelegatesParams struct {

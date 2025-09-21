@@ -34,10 +34,42 @@
 			</div>
 			<div class="box is-flex info-card is-align-items-center">
 				<div class="is-flex-grow-1">
-					Supply
+					Total Supply
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.TotalSupplyStr}} ({{.Info.TotalSupplyPercent}})
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Circulating Supply
 				</div>
 				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
 					{{.Info.Circulating}} ({{.Info.CirculatingPercent}})
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Burned
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.BurnedStr}} ({{.Info.BurnedPercent}})
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Max supply
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.MaxSupplyStr}}
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Effective supply cap
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.Cap}}
 				</div>
 			</div>
 			<div class="box is-flex info-card is-align-items-center">
