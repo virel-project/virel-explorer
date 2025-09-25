@@ -58,7 +58,7 @@
 		</div>
 
 		<!-- Transactions -->
-		<div class="block mt-6">	
+		<div class="block mt-6" id="transactions">	
 			<h3 class="title is-5">Transactions ({{.TransferType}})</h3>
 
 			<div class="tabs">
@@ -127,23 +127,23 @@
 				<!-- First button -->
 				<!-- if page > 1 ? is-primary : is-static-->
 				<a class="button {{ if isGreater .Page 1 }}is-primary{{ else }}is-static{{ end }}"
-					title="First page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}">
+					title="First page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}#transactions">
 					<span style="transform: scale(2) translateY(-0.125rem);">«</span>
 				</a>
 
 				<!-- Previous button-->
-				<a class="button {{ if isGreater .Page 0 }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{sub .Page 1}}">Previous</a>
+				<a class="button {{ if isGreater .Page 0 }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{sub .Page 1}}#transactions">Previous</a>
 
 				<!-- Current page indicator -->
 				<span class="button is-static">Page {{add .Page 1}} of {{add .MaxPage 1}}</span>
 
 				<!-- Next button -->
-				<a class="button {{ if isGreater .MaxPage .Page }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{add .Page 1}}">Next</a>
+				<a class="button {{ if isGreater .MaxPage .Page }}is-primary{{ else }}is-static{{ end }}" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{add .Page 1}}#transactions">Next</a>
 
 				<!-- Last button -->
 				<!-- if page <= maxPage - 2 ? is-primary : is-static -->
 				<a class="button {{ if and (isGreater .MaxPage 2) (le .Page (sub .MaxPage 2)) }}is-primary{{ else }}is-static{{ end }}" 
-					title="Last page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{.MaxPage}}">
+					title="Last page" href="/account/{{.Address}}?transfer_type={{$.TransferType}}&page={{.MaxPage}}#transactions">
 					<span style="transform: scale(2) translateY(-0.125rem);">»</span>
 				</a>
             </div>
