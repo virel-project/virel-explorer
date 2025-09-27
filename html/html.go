@@ -266,7 +266,7 @@ func (i *InfoRes) StakeStr() string {
 	return formatNumber(float64(i.Stake) / float64(i.Coin))
 }
 func (i *InfoRes) StakePercent() string {
-	return strconv.FormatFloat(float64(i.Stake)/float64(i.SupplyCap)*100, 'f', 2, 64) + "%"
+	return strconv.FormatFloat(float64(i.Stake)/float64(i.CirculatingSupply)*100, 'f', 2, 64) + "%"
 }
 
 func (i *InfoRes) Cap() string {
