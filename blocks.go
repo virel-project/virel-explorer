@@ -32,7 +32,7 @@ func NewBlocks(cl *daemonrpc.RpcClient) *Blocks {
 		return b
 	}
 
-	err = json.Unmarshal(delegates, &b)
+	err = json.Unmarshal(delegates, &b.KnownDelegates)
 	if err != nil {
 		fmt.Println(err)
 		return b
