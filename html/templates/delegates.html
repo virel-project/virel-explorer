@@ -21,7 +21,7 @@
 				<tbody>
 					{{ range .Delegates }}
 					<tr>
-						<td style="max-width:50vw;"><a href="/delegate/{{ .Address }}" class="hash">{{.Address}}</a></td>
+						<td style="max-width:50vw;"><a href="/delegate/{{ .Address }}" class="hash">{{.Address}}</a> <small>({{.Description}})</small></td>
 						<td>{{ printf "%.0f" .Balance }}</td>
 						<td>{{ printf "%.2f" .BalancePercent }}%</td>
 						<td>{{ printf "%.2f" .UptimePercent }}%</td>

@@ -279,6 +279,7 @@ type DelegatesParams struct {
 
 type Delegate struct {
 	Address        string
+	Description    string
 	Balance        float64
 	BalancePercent float64
 	UptimePercent  float64
