@@ -12,6 +12,7 @@ import (
 	"virel-explorer/html"
 
 	"github.com/virel-project/virel-blockchain/v3/address"
+	"github.com/virel-project/virel-blockchain/v3/chaintype"
 	"github.com/virel-project/virel-blockchain/v3/config"
 	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
 	"github.com/virel-project/virel-blockchain/v3/util"
@@ -84,7 +85,7 @@ func main() {
 
 		ir := html.InfoRes(*info)
 
-		delegs := make([]*html.Delegate, 0, len(knownDelegates))
+		delegs := make([]*html.DelegateInfo, 0, len(knownDelegates))
 
 		for _, v := range knownDelegates {
 			fmt.Println("missed:", v.BlocksMissed, "staked:", v.BlocksStaked)
@@ -99,7 +100,7 @@ func main() {
 				return err
 			}
 
-			delegs = append(delegs, &html.Delegate{
+			delegs = append(delegs, &html.DelegateInfo{
 				Address:        addr,
 				Description:    delegateInfo.Name,
 				Balance:        float64(delegateInfo.TotalAmount) / config.COIN,
@@ -108,7 +109,7 @@ func main() {
 			})
 		}
 
-		slices.SortFunc(delegs, func(a, b *html.Delegate) int {
+		slices.SortFunc(delegs, func(a, b *html.DelegateInfo) int {
 			return cmp.Compare(b.UptimePercent+b.BalancePercent/2, a.UptimePercent+a.BalancePercent/2)
 		})
 
@@ -124,7 +125,7 @@ func main() {
 
 		ir := html.InfoRes(*info)
 
-		delegs := make([]*html.Delegate, 0, len(knownDelegates))
+		delegs := make([]*html.DelegateInfo, 0, len(knownDelegates))
 
 		for _, v := range knownDelegates {
 			fmt.Println("missed:", v.BlocksMissed, "staked:", v.BlocksStaked)
@@ -139,7 +140,7 @@ func main() {
 				return err
 			}
 
-			delegs = append(delegs, &html.Delegate{
+			delegs = append(delegs, &html.DelegateInfo{
 				Address:        addr,
 				Description:    delegateInfo.Name,
 				Balance:        float64(delegateInfo.TotalAmount) / config.COIN,
@@ -148,7 +149,7 @@ func main() {
 			})
 		}
 
-		slices.SortFunc(delegs, func(a, b *html.Delegate) int {
+		slices.SortFunc(delegs, func(a, b *html.DelegateInfo) int {
 			return cmp.Compare(b.UptimePercent+b.BalancePercent/2, a.UptimePercent+a.BalancePercent/2)
 		})
 
@@ -156,6 +157,29 @@ func main() {
 			Delegates: delegs,
 		})
 	})
+	e.GET("/delegate/:id", func(c echo.Context) error {
+		delid := c.Param("id")
+		if len(delid) > 0 && delid[0] != 'd' {
+			delid = "delegate" + delid
+		}
+
+		deleg, err := d.GetDelegate(daemonrpc.GetDelegateRequest{
+			DelegateAddress: delid,
+		})
+		if err != nil {
+			return c.String(404, "404")
+		}
+
+		slices.SortStableFunc(deleg.Funds, func(a, b *chaintype.DelegatedFund) int {
+			return cmp.Compare(b.Amount, a.Amount)
+		})
+
+		return html.Delegate(c, &html.DelegateParams{
+			Address: deleg.Address.String(),
+			Info:    deleg,
+		})
+	})
+
 	e.GET("/block/:bl", func(c echo.Context) error {
 		bl := c.Param("bl")
 

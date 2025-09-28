@@ -192,6 +192,26 @@ func Address(c echo.Context, p AddressParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+type DelegateParams struct {
+	Address string
+	Info    *daemonrpc.GetDelegateResponse
+}
+
+func (d *DelegateParams) Staked() string {
+	return sutil.FormatCoin(d.Info.TotalAmount)
+}
+
+func Delegate(c echo.Context, p *DelegateParams) error {
+	b := bytes.NewBuffer([]byte{})
+	err := parse("delegate.html").Execute(b, p)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return c.HTMLBlob(200, b.Bytes())
+}
+
 func (b *BlockRes) PrintReward() string {
 	return sutil.FormatCoin(b.TotalReward)
 }
@@ -280,10 +300,10 @@ func (i *InfoRes) Cap() string {
 }
 
 type DelegatesParams struct {
-	Delegates []*Delegate
+	Delegates []*DelegateInfo
 }
 
-type Delegate struct {
+type DelegateInfo struct {
 	Address        string
 	Description    string
 	Balance        float64

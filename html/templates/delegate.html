@@ -1,0 +1,72 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+
+{{ block "header" . }}{{end}}
+
+<section class="section">
+	<div class="container">
+		<h2 class="title is-4">
+			Delegate {{.Info.Id}}
+		</h2>
+
+		<div class="container-fluid">
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Address
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					<a href="/account/{{.Address}}">{{.Address}}</a>
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Owner
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					<a href="/account/{{.Info.Owner.String}}">{{entity .Info.Owner.String}}</a>
+				</div>
+			</div>
+			<div class="is-flex">
+				<div class="is-flex-grow-1">
+					Staked balance
+				</div>
+				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
+					{{.Staked}}
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Stakers -->
+		<div class="block mt-6" id="stakers">
+			<h3 class="title is-5">Stakers</h3>
+
+			<div class="table-container">
+				<table class="table is-striped is-hoverable is-fullwidth is-narrow mb-6">
+					<thead>
+						<tr>
+							<th>Address</th>
+							<th>Amount</th>
+							<th>Unlock</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{ range .Info.Funds }}
+						
+						<tr>
+							<td><a href="/account/{{.Owner}}">{{entity .Owner.String}}</a></td>
+							<td>{{fmt_coin .Amount}}</td>
+							<td>{{.Unlock}}</td>
+						</tr>
+
+						{{ end }}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+{{ end }}
