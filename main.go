@@ -100,6 +100,10 @@ func main() {
 				return err
 			}
 
+			if v.Id != 1 && strings.Contains(strings.ToLower(delegateInfo.Name), "virel.org") {
+				delegateInfo.Name = "impersonator"
+			}
+
 			delegs = append(delegs, &html.DelegateInfo{
 				Address:        addr,
 				Description:    delegateInfo.Name,
@@ -138,6 +142,10 @@ func main() {
 			})
 			if err != nil {
 				return err
+			}
+
+			if v.Id != 1 && strings.Contains(strings.ToLower(delegateInfo.Name), "virel.org") {
+				delegateInfo.Name = "impersonator"
 			}
 
 			delegs = append(delegs, &html.DelegateInfo{
