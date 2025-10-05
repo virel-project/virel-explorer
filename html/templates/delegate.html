@@ -52,12 +52,13 @@
 						</tr>
 					</thead>
 					<tbody>
-						{{ range .Info.Funds }}
+						{{ $height := .Height }}
+						{{ range .Funds }}
 						
 						<tr>
 							<td><a href="/account/{{.Owner}}">{{entity .Owner.String}}</a></td>
 							<td>{{fmt_coin .Amount}}</td>
-							<td>{{.Unlock}}</td>
+							<td>{{.UnlockTime $height}} <small>({{.Unlock}})</small></td>
 						</tr>
 
 						{{ end }}

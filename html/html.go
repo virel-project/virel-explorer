@@ -10,6 +10,8 @@ import (
 	"time"
 	"virel-explorer/util"
 
+	"github.com/virel-project/virel-blockchain/v3/address"
+	"github.com/virel-project/virel-blockchain/v3/config"
 	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
 	sutil "github.com/virel-project/virel-blockchain/v3/util"
 
@@ -195,6 +197,30 @@ func Address(c echo.Context, p AddressParams) error {
 type DelegateParams struct {
 	Address string
 	Info    *daemonrpc.GetDelegateResponse
+	Height  uint64
+	Funds   []*Fund
+}
+
+type Fund struct {
+	Owner  address.Address `json:"owner"`
+	Amount uint64          `json:"amount"`
+	Unlock uint64          `json:"unlock"` // height of unlock of this fund
+}
+
+func (f *Fund) UnlockTime(height uint64) string {
+	if f.Unlock < height {
+		return "unlocked"
+	}
+
+	remaining := (time.Duration(int64(f.Unlock)-int64(height)) * config.TARGET_BLOCK_TIME * time.Second)
+	if remaining > 24*time.Hour {
+		days := math.Floor(remaining.Hours() / 24)
+		hours := remaining.Hours() - days*24
+
+		return fmt.Sprintf("%.0fd %.0fh", days, hours)
+	}
+
+	return remaining.String()
 }
 
 func (d *DelegateParams) Staked() string {

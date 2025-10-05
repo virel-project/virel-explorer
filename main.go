@@ -171,6 +171,11 @@ func main() {
 			delid = "delegate" + delid
 		}
 
+		info, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
+
 		deleg, err := d.GetDelegate(daemonrpc.GetDelegateRequest{
 			DelegateAddress: delid,
 		})
@@ -182,9 +187,20 @@ func main() {
 			return cmp.Compare(b.Amount, a.Amount)
 		})
 
+		funds := make([]*html.Fund, len(deleg.Funds))
+		for i, v := range deleg.Funds {
+			funds[i] = &html.Fund{
+				Owner:  v.Owner,
+				Amount: v.Amount,
+				Unlock: v.Unlock,
+			}
+		}
+
 		return html.Delegate(c, &html.DelegateParams{
 			Address: deleg.Address.String(),
 			Info:    deleg,
+			Height:  info.Height,
+			Funds:   funds,
 		})
 	})
 
