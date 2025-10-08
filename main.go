@@ -101,7 +101,7 @@ func main() {
 			}
 
 			if v.Id != 1 && strings.Contains(strings.ToLower(delegateInfo.Name), "virel.org") {
-				delegateInfo.Name = "impersonator"
+				delegateInfo.Name = "delegate"
 			}
 
 			delegs = append(delegs, &html.DelegateInfo{
@@ -145,7 +145,7 @@ func main() {
 			}
 
 			if v.Id != 1 && strings.Contains(strings.ToLower(delegateInfo.Name), "virel.org") {
-				delegateInfo.Name = "impersonator"
+				delegateInfo.Name = "delegate"
 			}
 
 			delegs = append(delegs, &html.DelegateInfo{
