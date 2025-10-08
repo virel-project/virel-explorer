@@ -15,16 +15,16 @@
 				<div class="is-flex-grow-1">
 					Address
 				</div>
-				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
-					<a href="/account/{{.Address}}">{{.Address}}</a>
+				<div class="is-flex-grow-1 has-text-right" style="max-width:70%;">
+					<a href="/account/{{.Address}}" class="hash">{{.Address}}</a>
 				</div>
 			</div>
 			<div class="is-flex">
 				<div class="is-flex-grow-1">
 					Owner
 				</div>
-				<div class="is-flex-grow-1 has-text-right hash" style="max-width:70%;">
-					<a href="/account/{{.Info.Owner.String}}">{{entity .Info.Owner.String}}</a>
+				<div class="is-flex-grow-1 has-text-right" style="max-width:70%;">
+					<a href="/account/{{.Info.Owner.String}}" class="hash">{{entity .Info.Owner.String}}</a>
 				</div>
 			</div>
 			<div class="is-flex">
@@ -57,7 +57,7 @@
 						
 						<tr>
 							<td><a href="/account/{{.Owner}}">{{entity .Owner.String}}</a></td>
-							<td>{{fmt_coin .Amount}}</td>
+							<td>{{fmt_coin_int .Amount}}</td>
 							<td>{{.UnlockTime $height}} <small>({{.Unlock}})</small></td>
 						</tr>
 

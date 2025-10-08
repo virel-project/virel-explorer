@@ -114,7 +114,7 @@ func main() {
 		}
 
 		slices.SortFunc(delegs, func(a, b *html.DelegateInfo) int {
-			return cmp.Compare(b.UptimePercent+b.BalancePercent/2, a.UptimePercent+a.BalancePercent/2)
+			return cmp.Compare(b.UptimePercent+b.BalancePercent/4, a.UptimePercent+a.BalancePercent/4)
 		})
 
 		return c.JSON(200, delegs)
@@ -158,7 +158,7 @@ func main() {
 		}
 
 		slices.SortFunc(delegs, func(a, b *html.DelegateInfo) int {
-			return cmp.Compare(b.UptimePercent+b.BalancePercent/2, a.UptimePercent+a.BalancePercent/2)
+			return cmp.Compare(b.UptimePercent+b.BalancePercent/4, a.UptimePercent+a.BalancePercent/4)
 		})
 
 		return html.Delegates(c, html.DelegatesParams{
