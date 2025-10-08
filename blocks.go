@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/virel-project/virel-blockchain/v3/bitcrypto"
+	"github.com/virel-project/virel-blockchain/v3/config"
 	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
 )
 
@@ -124,6 +125,12 @@ func (b *Blocks) update(adj float64) (bool, float64, error) {
 				} else {
 					deleg.BlocksStaked++
 				}
+
+				if deleg.BlocksMissed+deleg.BlocksStaked > 3*config.BLOCKS_PER_DAY {
+					deleg.BlocksMissed /= 2
+					deleg.BlocksStaked /= 2
+				}
+
 				delegs, err := json.Marshal(b.KnownDelegates)
 				if err != nil {
 					fmt.Println(err)
