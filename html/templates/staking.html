@@ -1,0 +1,62 @@
+{{ define "title" }}Virel Explorer{{ end }}
+
+{{ define "content" }}
+
+{{ block "header" . }}{{end}}
+
+<section class="section py-3">
+	<div class="container">
+		<h2 class="title is-4 mb-3 mt-4">Staking profit estimation</h2>
+
+		<div class="is-flex is-flex-wrap-wrap">
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					Stake
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					{{.Info.StakeStr}} ({{.Info.StakePercent}})
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					24h reward
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					+{{.Reward24h}}%
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					30 days reward
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					+{{.Reward30d}}%
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					60 days reward
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					+{{.Reward60d}}%
+				</div>
+			</div>
+			<div class="box is-flex info-card is-align-items-center">
+				<div class="is-flex-grow-1">
+					365 days reward (APY)
+				</div>
+				<div class="title is-4 is-flex-grow-1 has-text-right has-text-primary">
+					+{{.Reward1y}}%
+				</div>
+			</div>
+		</div>
+		<article class="message is-warning">
+			<div class="message-body">
+				<strong>Please note:</strong> The displayed APR is a live estimate based on current network conditions.
+				The actual rate you earn may change over time.
+			</div>
+		</article>
+	</div>
+</section>
+
+{{ end }}

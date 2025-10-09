@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"encoding/hex"
 	"fmt"
+	"math"
 	"net/http"
 	"slices"
 	"sort"
@@ -73,6 +74,30 @@ func main() {
 			RichList: items,
 			Market:   updaterOut.MarketInfo,
 			Info:     &ir,
+		})
+	})
+	e.GET("/staking", func(c echo.Context) error {
+		info, err := d.GetInfo(daemonrpc.GetInfoRequest{})
+		if err != nil {
+			return err
+		}
+
+		ir := html.InfoRes(*info)
+
+		stakeRewardDay := float64(ir.BlockReward*config.BLOCKS_PER_DAY) * 0.4 / config.COIN
+		stake := float64(info.Stake) / config.COIN
+
+		reward24h := stakeRewardDay / stake
+		reward30d := (stakeRewardDay * 30) / stake
+		reward60d := (stakeRewardDay * 60) / stake
+		reward1y := (stakeRewardDay * 365) / stake
+
+		return html.Staking(c, html.StakingParams{
+			Info:      &ir,
+			Reward24h: math.Round(reward24h*10000) / 100,
+			Reward30d: math.Round(reward30d*10000) / 100,
+			Reward60d: math.Round(reward60d*10000) / 100,
+			Reward1y:  math.Round(reward1y*10000) / 100,
 		})
 	})
 	e.GET("/delegates.json", func(c echo.Context) error {

@@ -170,6 +170,22 @@ func Stats(c echo.Context, p StatsParams) error {
 	return c.HTMLBlob(200, b.Bytes())
 }
 
+type StakingParams struct {
+	Info                                      *InfoRes
+	Reward24h, Reward30d, Reward60d, Reward1y float64
+}
+
+func Staking(c echo.Context, p StakingParams) error {
+	b := bytes.NewBuffer([]byte{})
+	err := parse("staking.html").Execute(b, p)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return c.HTMLBlob(200, b.Bytes())
+}
+
 type TransactionItem struct {
 	Tx     *daemonrpc.GetTransactionResponse
 	Txid   string
