@@ -13,6 +13,7 @@ import (
 	"virel-explorer/html"
 
 	"github.com/virel-project/virel-blockchain/v3/address"
+	"github.com/virel-project/virel-blockchain/v3/block"
 	"github.com/virel-project/virel-blockchain/v3/chaintype"
 	"github.com/virel-project/virel-blockchain/v3/config"
 	"github.com/virel-project/virel-blockchain/v3/rpc/daemonrpc"
@@ -84,13 +85,12 @@ func main() {
 
 		ir := html.InfoRes(*info)
 
-		stakeRewardDay := float64(ir.BlockReward*config.BLOCKS_PER_DAY) * 0.4 / config.COIN
 		stake := float64(info.Stake) / config.COIN
 
-		reward24h := stakeRewardDay / stake
-		reward30d := (stakeRewardDay * 30) / stake
-		reward60d := (stakeRewardDay * 60) / stake
-		reward1y := (stakeRewardDay * 365) / stake
+		reward24h := GetStakeReward(ir.Height, config.BLOCKS_PER_DAY) / stake
+		reward30d := GetStakeReward(ir.Height, 30*config.BLOCKS_PER_DAY) / stake
+		reward60d := GetStakeReward(ir.Height, 60*config.BLOCKS_PER_DAY) / stake
+		reward1y := GetStakeReward(ir.Height, 365*config.BLOCKS_PER_DAY) / stake
 
 		return html.Staking(c, html.StakingParams{
 			Info:      &ir,
@@ -463,4 +463,10 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 	}
 
 	c.String(code, fmt.Sprintf("error: %d", code))
+}
+
+func GetStakeReward(startHeight, count uint64) float64 {
+	startSupply := block.GetSupplyAtHeight(startHeight)
+	endSupply := block.GetSupplyAtHeight(startHeight + count)
+	return float64(endSupply-startSupply) / config.COIN * 0.4
 }
