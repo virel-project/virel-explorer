@@ -55,12 +55,12 @@ func main() {
 			items[i] = html.RichListItem{
 				Rank:    i + 1,
 				Address: st.Address,
-				Balance: float64(st.State.Balance) / config.COIN,
+				Balance: float64(st.Total()) / config.COIN,
 				Percent: func() float64 {
 					if updaterOut.MarketInfo.Supply == 0 {
 						return 0
 					}
-					return float64(st.State.Balance) / config.COIN / float64(updaterOut.MarketInfo.Supply) * 100
+					return float64(st.Total()) / config.COIN / float64(updaterOut.MarketInfo.Supply) * 100
 				}(),
 			}
 		}
